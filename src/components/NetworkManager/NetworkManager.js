@@ -7,6 +7,7 @@ import './NetworkManager.css';
 const NetworkManager = () => {
   const { gameState, actions } = useGame();
   const [channelInput, setChannelInput] = useState('');
+  const [channelName, setChannelName] = useState('');
   const [showHostOptions, setShowHostOptions] = useState(false);
   const [showJoinOptions, setShowJoinOptions] = useState(false);
 
@@ -19,6 +20,7 @@ const NetworkManager = () => {
   const handleHostGame = async () => {
     try {
       const channelName = channelInput || generateChannelName();
+      setChannelName(channelName);
       await actions.hostGame(channelName);
       setShowHostOptions(false);
     } catch (error) {
@@ -58,6 +60,9 @@ const NetworkManager = () => {
             <p>Status: <span className={`status ${gameState.connectionStatus.toLowerCase()}`}>
               {gameState.connectionStatus}
             </span></p>
+            {channelName && channelName.length > 0 && (
+              <p>Channel: {channelName}</p>
+            )}
             {gameState.playerId !== null && (
               <p>You are Player: {gameState.playerId + 1}</p>
             )}
