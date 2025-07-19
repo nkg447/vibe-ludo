@@ -223,6 +223,23 @@
   animation: blink 1.5s ease-in-out infinite;
 }
 
+.winner-announcement {
+  font-size: 1.2rem;
+  color: #27ae60;
+  font-weight: bold;
+  margin-top: 10px;
+  padding: 10px;
+  background: linear-gradient(45deg, #f39c12, #e67e22);
+  border-radius: 10px;
+  text-align: center;
+  animation: celebration 2s ease-in-out infinite;
+}
+
+@keyframes celebration {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0.3; }

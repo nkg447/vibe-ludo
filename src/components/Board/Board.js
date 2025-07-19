@@ -1,131 +1,14 @@
 import React from 'react';
-import logger from '../../logger';
+import { useGameActions, useBoardLogic } from '../../store';
 import './Board.css';
 
-const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
+const Board = ({ gameState, currentPlayer, diceValue }) => {
   // Board layout - 15x15 grid
   const BOARD_SIZE = 15;
   
-  // Define the path positions for each color
-  const getPathPositions = (color) => {
-    const paths = {
-      red: [
-        // Starting from red home exit (6,1) and going clockwise
-        [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
-        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
-        [0, 7], [0, 8],
-        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
-        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13],
-        [7, 13], [8, 13],
-        [8, 12], [8, 11], [8, 10], [8, 9],
-        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
-        [14, 7], [14, 6],
-        [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
-        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
-        [7, 0], [6, 0],
-        // Home stretch for red
-        [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6]
-      ],
-      blue: [
-        // Starting from blue home exit (13,6) and going clockwise
-        [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
-        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
-        [7, 0], [6, 0],
-        [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
-        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
-        [0, 7], [0, 8],
-        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
-        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14],
-        [7, 14], [8, 14],
-        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
-        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8],
-        // Home stretch for blue
-        [13, 7], [12, 7], [11, 7], [10, 7], [9, 7], [8, 7]
-      ],
-      yellow: [
-        // Starting from yellow home exit (8,13) and going clockwise
-        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
-        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
-        [14, 7], [14, 6],
-        [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
-        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
-        [7, 0], [6, 0],
-        [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
-        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
-        [0, 7], [0, 8],
-        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
-        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13],
-        // Home stretch for yellow
-        [7, 13], [7, 12], [7, 11], [7, 10], [7, 9], [7, 8]
-      ],
-      green: [
-        // Starting from green home exit (1,8) and going clockwise
-        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
-        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14],
-        [7, 14], [8, 14],
-        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
-        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
-        [14, 7], [14, 6],
-        [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
-        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
-        [7, 0], [6, 0],
-        [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
-        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
-        [0, 7], [0, 8],
-        // Home stretch for green
-        [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7]
-      ]
-    };
-    return paths[color] || [];
-  };
-
-  const canMovePiece = (playerIndex, pieceIndex) => {
-    if (playerIndex !== currentPlayer) return false;
-    if (diceValue === 0) return false; // No dice rolled yet
-    
-    const player = gameState.players[playerIndex];
-    if (!player) return false;
-    
-    const currentPosition = player.pieces[pieceIndex];
-    
-    // Can move from home only with a 6
-    if (currentPosition === 0) return diceValue === 6;
-    
-    // Can move pieces already on the board
-    if (currentPosition > 0) return diceValue > 0;
-    
-    return false;
-  };
-
-  const handlePieceClick = (playerIndex, pieceIndex) => {
-    logger.log('Piece clicked:', { playerIndex, pieceIndex, currentPlayer, diceValue });
-    
-    if (!canMovePiece(playerIndex, pieceIndex)) {
-      logger.log('Cannot move this piece');
-      return;
-    }
-    
-    const player = gameState.players[playerIndex];
-    const currentPosition = player.pieces[pieceIndex];
-    logger.log('Current position:', currentPosition);
-    
-    // If piece is at home (position 0) and dice is 6, move to start position
-    if (currentPosition === 0 && diceValue === 6) {
-      logger.log('Moving piece from home to start');
-      onMovePiece(playerIndex, pieceIndex, 1);
-    } else if (currentPosition > 0 && diceValue > 0) {
-      // Move piece forward by dice value
-      const newPosition = Math.min(currentPosition + diceValue, 57);
-      logger.log('Moving piece from', currentPosition, 'to', newPosition);
-      onMovePiece(playerIndex, pieceIndex, newPosition);
-    }
-  };
-
-  const getPiecePosition = (color, position) => {
-    if (position === 0) return null; // Piece is at home
-    const pathPositions = getPathPositions(color);
-    return pathPositions[position - 1] || null;
-  };
+  // Use game actions and board logic hooks
+  const { handlePieceClick } = useGameActions();
+  const { getPiecesOnCell, getHomePieces } = useBoardLogic();
 
   const renderCell = (row, col) => {
     const cellKey = `${row}-${col}`;
@@ -209,94 +92,38 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
     }
     
     // Find pieces on this cell
-    const piecesOnCell = [];
-    gameState.players.forEach((player, playerIndex) => {
-      player.pieces.forEach((position, pieceIndex) => {
-        const piecePos = getPiecePosition(player.color, position);
-        if (piecePos && piecePos[0] === row && piecePos[1] === col) {
-          piecesOnCell.push({ playerIndex, pieceIndex, color: player.color });
-        }
-      });
-    });
+    const piecesOnCell = getPiecesOnCell(row, col);
     
-    // Add home pieces - map player indices to correct positions
-    const getPlayerByColor = (color) => {
-      return gameState.players.find(player => player.color === color);
-    };
-    
-    const getPlayerIndexByColor = (color) => {
-      return gameState.players.findIndex(player => player.color === color);
-    };
-    
+    // Add home pieces - use the new logic
+    const homePieces = [];
     if (isRedPieceArea) {
-      const redPlayer = getPlayerByColor('red');
-      const redPlayerIndex = getPlayerIndexByColor('red');
-      if (redPlayer) {
-        const homeIndex = (row - 2) * 2 + (col - 2);
-        if (homeIndex < 4) {
-          const piece = redPlayer.pieces[homeIndex];
-          if (piece === 0) {
-            piecesOnCell.push({ playerIndex: redPlayerIndex, pieceIndex: homeIndex, color: 'red' });
-          }
-        }
-      }
+      homePieces.push(...getHomePieces('red', row, col));
     }
-    
     if (isBluePieceArea) {
-      const bluePlayer = getPlayerByColor('blue');
-      const bluePlayerIndex = getPlayerIndexByColor('blue');
-      if (bluePlayer) {
-        const homeIndex = (row - 11) * 2 + (col - 2);
-        if (homeIndex < 4) {
-          const piece = bluePlayer.pieces[homeIndex];
-          if (piece === 0) {
-            piecesOnCell.push({ playerIndex: bluePlayerIndex, pieceIndex: homeIndex, color: 'blue' });
-          }
-        }
-      }
+      homePieces.push(...getHomePieces('blue', row, col));
     }
-    
     if (isYellowPieceArea) {
-      const yellowPlayer = getPlayerByColor('yellow');
-      const yellowPlayerIndex = getPlayerIndexByColor('yellow');
-      if (yellowPlayer) {
-        const homeIndex = (row - 11) * 2 + (col - 11);
-        if (homeIndex < 4) {
-          const piece = yellowPlayer.pieces[homeIndex];
-          if (piece === 0) {
-            piecesOnCell.push({ playerIndex: yellowPlayerIndex, pieceIndex: homeIndex, color: 'yellow' });
-          }
-        }
-      }
+      homePieces.push(...getHomePieces('yellow', row, col));
+    }
+    if (isGreenPieceArea) {
+      homePieces.push(...getHomePieces('green', row, col));
     }
     
-    if (isGreenPieceArea) {
-      const greenPlayer = getPlayerByColor('green');
-      const greenPlayerIndex = getPlayerIndexByColor('green');
-      if (greenPlayer) {
-        const homeIndex = (row - 2) * 2 + (col - 11);
-        if (homeIndex < 4) {
-          const piece = greenPlayer.pieces[homeIndex];
-          if (piece === 0) {
-            piecesOnCell.push({ playerIndex: greenPlayerIndex, pieceIndex: homeIndex, color: 'green' });
-          }
-        }
-      }
-    }
+    const allPieces = [...piecesOnCell, ...homePieces];
     
     return (
       <div key={cellKey} className={cellClass}>
-        {piecesOnCell.map((piece, index) => (
+        {allPieces.map((piece, index) => (
           <div
             key={`${piece.playerIndex}-${piece.pieceIndex}`}
             className={`game-piece ${piece.color}-piece ${
-              piece.playerIndex === currentPlayer ? 'current-player-piece' : ''
+              piece.isCurrentPlayer ? 'current-player-piece' : ''
             } ${
-              canMovePiece(piece.playerIndex, piece.pieceIndex) ? 'movable-piece' : ''
+              piece.isMovable ? 'movable-piece' : ''
             }`}
             onClick={() => handlePieceClick(piece.playerIndex, piece.pieceIndex)}
             style={{
-              transform: piecesOnCell.length > 1 ? `translate(${index * 3}px, ${index * 3}px)` : 'none'
+              transform: allPieces.length > 1 ? `translate(${index * 3}px, ${index * 3}px)` : 'none'
             }}
           />
         ))}

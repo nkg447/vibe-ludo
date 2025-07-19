@@ -1,0 +1,105 @@
+.game-stats {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  min-width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.game-stats h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+.game-stats h4 {
+  color: #34495e;
+  margin: 15px 0 10px 0;
+  font-size: 1rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 5px 0;
+}
+
+.stat-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.stat-value {
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.player-stats {
+  margin-top: 15px;
+}
+
+.player-stat {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 5px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.player-name {
+  font-weight: bold;
+}
+
+.player-moves,
+.pieces-home,
+.pieces-finished {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
+
+.recent-moves {
+  margin-top: 15px;
+  border-top: 1px solid #ecf0f1;
+  padding-top: 10px;
+}
+
+.moves-list {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.move-entry {
+  padding: 4px 0;
+  font-size: 0.85rem;
+  color: #555;
+  border-bottom: 1px solid #f1f2f6;
+}
+
+.move-entry:last-child {
+  border-bottom: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .game-stats {
+    min-width: auto;
+    margin-top: 10px;
+  }
+  
+  .player-stat {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 5px;
+  }
+}
