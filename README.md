@@ -68,3 +68,43 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+Features of the Ludo Game:
+Game Board: A 15x15 grid representing the traditional Ludo board with:
+
+Four colored home areas (Red, Blue, Yellow, Green)
+Path cells for piece movement
+Safe zones marked with stars
+Center finishing area
+Game Pieces:
+
+4 pieces per player (4 players total)
+Color-coded pieces (red, blue, yellow, green)
+Clickable pieces that highlight when it's the player's turn
+Dice Component:
+
+Visual dice with dots showing the rolled number
+Click to roll functionality
+Animated dice face
+Game Logic:
+
+Turn-based gameplay for up to 4 players
+Players get another turn when they roll a 6
+Pieces start at home and move along the path
+Simple click-to-move mechanism
+Visual Design:
+
+Responsive design that works on different screen sizes
+Beautiful gradient background
+Hover effects and animations
+Clear indication of current player's turn
+How to Play:
+Starting: Each player has 4 pieces in their home area
+Rolling: Click the dice or "Roll Dice" button to roll
+Moving:
+Roll a 6 to get a piece out of home
+Click on your pieces to move them forward by the dice value
+Only current player's pieces are interactive
+Turns: Players take turns, with extra turns when rolling a 6
+Winning: First player to get all pieces to the center wins
+The game is now running at http://localhost:3000 and is ready to play! You can have up to 4 players take turns on the same screen, making it perfect for local multiplayer gaming.
