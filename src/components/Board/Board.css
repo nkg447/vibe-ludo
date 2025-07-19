@@ -52,20 +52,41 @@
   background-color: #d5dbdb;
 }
 
-/* Safe zones */
+/* Safe zones - starting positions for each player */
 .safe-zone {
-  background-color: #f8f9fa !important;
-  border: 2px solid #495057 !important;
+  border: 3px solid #495057 !important;
   position: relative;
+}
+
+.red-safe {
+  background-color: #ffebee !important;
+  border-color: #e74c3c !important;
+}
+
+.blue-safe {
+  background-color: #e3f2fd !important;
+  border-color: #3498db !important;
+}
+
+.yellow-safe {
+  background-color: #fffde7 !important;
+  border-color: #f1c40f !important;
+}
+
+.green-safe {
+  background-color: #e8f5e8 !important;
+  border-color: #27ae60 !important;
 }
 
 .safe-zone::after {
   content: '★';
   position: absolute;
-  top: 2px;
-  right: 2px;
-  font-size: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
   color: #495057;
+  font-weight: bold;
 }
 
 /* Center area */

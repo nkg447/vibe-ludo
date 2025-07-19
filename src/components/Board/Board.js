@@ -9,7 +9,7 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
   const getPathPositions = (color) => {
     const paths = {
       red: [
-        // Starting from red home exit
+        // Starting from red home exit (6,1) and going clockwise
         [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
         [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
         [0, 7], [0, 8],
@@ -20,50 +20,59 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
         [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
         [14, 7], [14, 6],
         [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
-        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1],
+        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
+        [7, 0], [6, 0],
+        // Home stretch for red
         [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6]
       ],
       blue: [
-        // Starting from blue home exit
+        // Starting from blue home exit (13,6) and going clockwise
         [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
         [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
         [7, 0], [6, 0],
         [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
-        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6],
-        [0, 7], [0, 8],
-        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
-        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14],
-        [7, 14], [8, 14],
-        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
-        [7, 8], [7, 7], [7, 6], [7, 5], [7, 4], [7, 3]
-      ],
-      yellow: [
-        // Starting from yellow home exit
-        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
-        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
-        [14, 7], [14, 6],
-        [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
-        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1],
-        [7, 1], [6, 1],
-        [6, 2], [6, 3], [6, 4], [6, 5], [6, 6],
         [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
         [0, 7], [0, 8],
-        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
-        [7, 8], [7, 9], [7, 10], [7, 11], [7, 12], [7, 13]
-      ],
-      green: [
-        // Starting from green home exit
         [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
         [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14],
         [7, 14], [8, 14],
         [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
         [9, 8], [10, 8], [11, 8], [12, 8], [13, 8],
+        // Home stretch for blue
+        [13, 7], [12, 7], [11, 7], [10, 7], [9, 7], [8, 7]
+      ],
+      yellow: [
+        // Starting from yellow home exit (8,13) and going clockwise
+        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
+        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
         [14, 7], [14, 6],
         [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
         [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
         [7, 0], [6, 0],
         [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
-        [7, 6], [7, 7], [7, 8], [7, 9], [7, 10], [7, 11]
+        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
+        [0, 7], [0, 8],
+        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
+        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13],
+        // Home stretch for yellow
+        [7, 13], [7, 12], [7, 11], [7, 10], [7, 9], [7, 8]
+      ],
+      green: [
+        // Starting from green home exit (1,8) and going clockwise
+        [1, 8], [2, 8], [3, 8], [4, 8], [5, 8],
+        [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14],
+        [7, 14], [8, 14],
+        [8, 13], [8, 12], [8, 11], [8, 10], [8, 9],
+        [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8],
+        [14, 7], [14, 6],
+        [13, 6], [12, 6], [11, 6], [10, 6], [9, 6],
+        [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
+        [7, 0], [6, 0],
+        [6, 1], [6, 2], [6, 3], [6, 4], [6, 5],
+        [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
+        [0, 7], [0, 8],
+        // Home stretch for green
+        [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7]
       ]
     };
     return paths[color] || [];
@@ -111,13 +120,22 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       (col === 7 && (row === 0 || row === 14))
     );
     
-    // Define safe zones (colored squares)
+    // Define safe zones (colored squares) - at starting positions
     const isSafeZone = (
-      (row === 6 && col === 2) || // Red safe
-      (row === 2 && col === 8) || // Blue safe
-      (row === 8 && col === 12) || // Yellow safe
-      (row === 12 && col === 6)   // Green safe
+      (row === 6 && col === 1) || // Red starting position
+      (row === 13 && col === 6) || // Blue starting position  
+      (row === 8 && col === 13) || // Yellow starting position
+      (row === 1 && col === 8)   // Green starting position
     );
+    
+    // Get safe zone color based on position
+    const getSafeZoneColor = (row, col) => {
+      if (row === 6 && col === 1) return 'red-safe';
+      if (row === 13 && col === 6) return 'blue-safe';
+      if (row === 8 && col === 13) return 'yellow-safe';
+      if (row === 1 && col === 8) return 'green-safe';
+      return '';
+    };
     
     // Center area
     const isCenter = row >= 6 && row <= 8 && col >= 6 && col <= 8;
@@ -130,7 +148,10 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
     else if (isPath) cellClass += ' path';
     else cellClass += ' border';
     
-    if (isSafeZone) cellClass += ' safe-zone';
+    if (isSafeZone) {
+      cellClass += ' safe-zone';
+      cellClass += ` ${getSafeZoneColor(row, col)}`;
+    }
     
     // Find pieces on this cell
     const piecesOnCell = [];
