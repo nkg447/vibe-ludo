@@ -59,7 +59,7 @@ export const GameProvider = ({ children }) => {
         dispatch(gameActions.setConnectionStatus(CONNECTION_STATUS.CONNECTING));
         dispatch(gameActions.setPlayerId(0)); // Host is always player 0
         
-        await webrtcService.connect(channelName, true);
+        await webrtcService.connect(channelName, false);
         
         return channelName;
       } catch (error) {
@@ -76,7 +76,7 @@ export const GameProvider = ({ children }) => {
         dispatch(gameActions.setConnectionStatus(CONNECTION_STATUS.CONNECTING));
         dispatch(gameActions.setPlayerId(1)); // Guest is player 1 (for 2-player games)
         
-        await webrtcService.connect(channelName, false);
+        await webrtcService.connect(channelName, true);
         
         return channelName;
       } catch (error) {
