@@ -7,7 +7,8 @@ const LudoGame = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [numberOfPlayers, setNumberOfPlayers] = useState(4);
   const [currentPlayer, setCurrentPlayer] = useState(0);
-  const [diceValue, setDiceValue] = useState(1);
+  const [diceValue, setDiceValue] = useState(0);
+  const [moveRequired, setMoveRequired] = useState(false);
   const [gameState, setGameState] = useState({
     players: [
       { id: 0, color: 'red', pieces: [0, 0, 0, 0] },
@@ -57,14 +58,47 @@ const LudoGame = () => {
     
     setGameState({ players });
     setCurrentPlayer(0);
+    setDiceValue(0);
+    setMoveRequired(false);
   };
 
   const rollDice = () => {
+    // Prevent rolling if a move is required
+    if (moveRequired) {
+      console.log('Cannot roll dice - must move a piece first');
+      return;
+    }
+    
     const newDiceValue = Math.floor(Math.random() * 6) + 1;
     console.log('Dice rolled:', newDiceValue, 'Current player:', currentPlayer);
     setDiceValue(newDiceValue);
     
-    // Don't switch players here - wait for piece movement
+    // Check if current player has any valid moves after rolling
+    setTimeout(() => {
+      const currentPlayerData = gameState.players[currentPlayer];
+      if (currentPlayerData) {
+        const hasValidMoves = currentPlayerData.pieces.some((position, pieceIndex) => {
+          // Can move from home only with a 6
+          if (position === 0) return newDiceValue === 6;
+          // Can move pieces already on the board
+          if (position > 0) return newDiceValue > 0;
+          return false;
+        });
+        
+        if (hasValidMoves) {
+          // Player has valid moves, require them to move a piece
+          console.log('Player has valid moves, requiring piece movement');
+          setMoveRequired(true);
+        } else {
+          // No valid moves, switch to next player automatically
+          console.log('No valid moves available, switching to next player');
+          const nextPlayer = (currentPlayer + 1) % numberOfPlayers;
+          setCurrentPlayer(nextPlayer);
+          setDiceValue(0);
+          setMoveRequired(false);
+        }
+      }
+    }, 100);
   };
 
   const movePiece = (playerIndex, pieceIndex, newPosition) => {
@@ -75,6 +109,9 @@ const LudoGame = () => {
       console.log('New game state:', newState);
       return newState;
     });
+    
+    // Clear the move requirement since a piece was moved
+    setMoveRequired(false);
     
     // After moving a piece, switch to next player if dice was not 6
     if (diceValue !== 6) {
@@ -90,7 +127,8 @@ const LudoGame = () => {
   const restartGame = () => {
     setGameStarted(false);
     setCurrentPlayer(0);
-    setDiceValue(1);
+    setDiceValue(0);
+    setMoveRequired(false);
   };
 
   const getPlayersForPreview = (numPlayers) => {
@@ -205,9 +243,14 @@ const LudoGame = () => {
         />
         
         <div className="game-controls">
-          <Dice value={diceValue} onRoll={rollDice} />
+          <Dice 
+            value={diceValue} 
+            onRoll={rollDice}
+            disabled={moveRequired}
+          />
           <div className="player-turn">
             {getCurrentPlayerInfo().name}'s Turn
+            {moveRequired && <div className="move-required">Must move a piece!</div>}
           </div>
         </div>
       </div>

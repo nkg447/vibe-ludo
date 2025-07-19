@@ -1,7 +1,7 @@
 import React from 'react';
 import './Dice.css';
 
-const Dice = ({ value, onRoll }) => {
+const Dice = ({ value, onRoll, disabled }) => {
   const getDotPattern = (value) => {
     const patterns = {
       1: [4], // center
@@ -12,6 +12,12 @@ const Dice = ({ value, onRoll }) => {
       6: [0, 2, 3, 5, 6, 8] // two columns
     };
     return patterns[value] || [];
+  };
+
+  const handleRoll = () => {
+    if (!disabled) {
+      onRoll();
+    }
   };
 
   const renderDots = () => {
@@ -26,13 +32,20 @@ const Dice = ({ value, onRoll }) => {
 
   return (
     <div className="dice-container">
-      <div className="dice" onClick={onRoll}>
+      <div 
+        className={`dice ${disabled ? 'disabled' : ''}`} 
+        onClick={handleRoll}
+      >
         <div className="dice-face">
           {renderDots()}
         </div>
       </div>
-      <button className="roll-button" onClick={onRoll}>
-        Roll Dice
+      <button 
+        className={`roll-button ${disabled ? 'disabled' : ''}`} 
+        onClick={handleRoll}
+        disabled={disabled}
+      >
+        {disabled ? 'Move a piece!' : 'Roll Dice'}
       </button>
     </div>
   );
