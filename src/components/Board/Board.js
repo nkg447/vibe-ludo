@@ -110,6 +110,12 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
     const isYellowHome = row >= 9 && row <= 13 && col >= 9 && col <= 13;
     const isGreenHome = row >= 1 && row <= 5 && col >= 9 && col <= 13;
     
+    // Define specific piece positions within homes (2x2 grid in center of each home)
+    const isRedPieceArea = row >= 2 && row <= 3 && col >= 2 && col <= 3;
+    const isBluePieceArea = row >= 11 && row <= 12 && col >= 2 && col <= 3;
+    const isYellowPieceArea = row >= 11 && row <= 12 && col >= 11 && col <= 12;
+    const isGreenPieceArea = row >= 2 && row <= 3 && col >= 11 && col <= 12;
+    
     // Define path cells
     const isPath = (
       (row === 6 && (col <= 5 || col >= 9)) ||
@@ -150,10 +156,22 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
     // Center area
     const isCenter = row >= 6 && row <= 8 && col >= 6 && col <= 8;
     
-    if (isRedHome) cellClass += ' red-home';
-    else if (isBlueHome) cellClass += ' blue-home';
-    else if (isYellowHome) cellClass += ' yellow-home';
-    else if (isGreenHome) cellClass += ' green-home';
+    if (isRedHome) {
+      cellClass += ' red-home';
+      if (isRedPieceArea) cellClass += ' piece-area';
+    }
+    else if (isBlueHome) {
+      cellClass += ' blue-home';
+      if (isBluePieceArea) cellClass += ' piece-area';
+    }
+    else if (isYellowHome) {
+      cellClass += ' yellow-home';
+      if (isYellowPieceArea) cellClass += ' piece-area';
+    }
+    else if (isGreenHome) {
+      cellClass += ' green-home';
+      if (isGreenPieceArea) cellClass += ' piece-area';
+    }
     else if (isCenter) cellClass += ' center';
     else if (isPath) cellClass += ' path';
     else cellClass += ' border';
@@ -183,11 +201,11 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       return gameState.players.findIndex(player => player.color === color);
     };
     
-    if (isRedHome && row >= 2 && row <= 4 && col >= 2 && col <= 4) {
+    if (isRedPieceArea) {
       const redPlayer = getPlayerByColor('red');
       const redPlayerIndex = getPlayerIndexByColor('red');
       if (redPlayer) {
-        const homeIndex = (row - 2) * 3 + (col - 2);
+        const homeIndex = (row - 2) * 2 + (col - 2);
         if (homeIndex < 4) {
           const piece = redPlayer.pieces[homeIndex];
           if (piece === 0) {
@@ -197,11 +215,11 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       }
     }
     
-    if (isBlueHome && row >= 10 && row <= 12 && col >= 2 && col <= 4) {
+    if (isBluePieceArea) {
       const bluePlayer = getPlayerByColor('blue');
       const bluePlayerIndex = getPlayerIndexByColor('blue');
       if (bluePlayer) {
-        const homeIndex = (row - 10) * 3 + (col - 2);
+        const homeIndex = (row - 11) * 2 + (col - 2);
         if (homeIndex < 4) {
           const piece = bluePlayer.pieces[homeIndex];
           if (piece === 0) {
@@ -211,11 +229,11 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       }
     }
     
-    if (isYellowHome && row >= 10 && row <= 12 && col >= 10 && col <= 12) {
+    if (isYellowPieceArea) {
       const yellowPlayer = getPlayerByColor('yellow');
       const yellowPlayerIndex = getPlayerIndexByColor('yellow');
       if (yellowPlayer) {
-        const homeIndex = (row - 10) * 3 + (col - 10);
+        const homeIndex = (row - 11) * 2 + (col - 11);
         if (homeIndex < 4) {
           const piece = yellowPlayer.pieces[homeIndex];
           if (piece === 0) {
@@ -225,11 +243,11 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       }
     }
     
-    if (isGreenHome && row >= 2 && row <= 4 && col >= 10 && col <= 12) {
+    if (isGreenPieceArea) {
       const greenPlayer = getPlayerByColor('green');
       const greenPlayerIndex = getPlayerIndexByColor('green');
       if (greenPlayer) {
-        const homeIndex = (row - 2) * 3 + (col - 10);
+        const homeIndex = (row - 2) * 2 + (col - 11);
         if (homeIndex < 4) {
           const piece = greenPlayer.pieces[homeIndex];
           if (piece === 0) {
