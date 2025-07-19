@@ -56,5 +56,26 @@ export const gameActions = {
   winGame: (winnerIndex) => ({
     type: GAME_ACTIONS.WIN_GAME,
     payload: { winnerIndex }
+  }),
+
+  // WebRTC network actions
+  setNetworkMode: (mode) => ({
+    type: GAME_ACTIONS.SET_NETWORK_MODE,
+    payload: { mode }
+  }),
+
+  setConnectionStatus: (status) => ({
+    type: GAME_ACTIONS.SET_CONNECTION_STATUS,
+    payload: { status }
+  }),
+
+  setPlayerId: (playerId) => ({
+    type: GAME_ACTIONS.SET_PLAYER_ID,
+    payload: { playerId }
+  }),
+
+  syncGameState: (gameState) => ({
+    type: GAME_ACTIONS.SYNC_GAME_STATE,
+    payload: { gameState }
   })
 };

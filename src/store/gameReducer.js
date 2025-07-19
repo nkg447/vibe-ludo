@@ -1,4 +1,4 @@
-import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS } from './gameTypes';
+import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS, NETWORK_MODE, CONNECTION_STATUS } from './gameTypes';
 import { hasValidMoves, hasPlayerWon, rollDiceValue } from './gameUtils';
 import logger from '../logger';
 
@@ -30,7 +30,14 @@ export const initialGameState = {
   
   // Winner
   winner: null,
-  gameEndTime: null
+  gameEndTime: null,
+
+  // WebRTC network state
+  networkMode: NETWORK_MODE.LOCAL,
+  connectionStatus: CONNECTION_STATUS.DISCONNECTED,
+  playerId: null,
+  channelName: null,
+  isMyTurn: true // For local games, always true initially
 };
 
 // Game reducer
@@ -206,7 +213,11 @@ export const gameReducer = (state, action) => {
         ...state,
         currentPlayer: action.payload.playerIndex,
         moveRequired: false,
-        consecutiveSixes: 0
+        consecutiveSixes: 0,
+        // Update isMyTurn based on network mode
+        isMyTurn: state.networkMode === NETWORK_MODE.LOCAL 
+          ? true 
+          : action.payload.playerIndex === state.playerId
       };
 
     case GAME_ACTIONS.SET_MOVE_REQUIRED:
@@ -252,6 +263,48 @@ export const gameReducer = (state, action) => {
         winner: action.payload.winnerIndex,
         gameEndTime: Date.now()
       };
+
+    // WebRTC network actions
+    case GAME_ACTIONS.SET_NETWORK_MODE:
+      return {
+        ...state,
+        networkMode: action.payload.mode,
+        // Reset network-related state when changing modes
+        connectionStatus: action.payload.mode === NETWORK_MODE.LOCAL 
+          ? CONNECTION_STATUS.DISCONNECTED 
+          : state.connectionStatus,
+        playerId: action.payload.mode === NETWORK_MODE.LOCAL ? null : state.playerId,
+        isMyTurn: action.payload.mode === NETWORK_MODE.LOCAL ? true : state.isMyTurn
+      };
+
+    case GAME_ACTIONS.SET_CONNECTION_STATUS:
+      return {
+        ...state,
+        connectionStatus: action.payload.status
+      };
+
+    case GAME_ACTIONS.SET_PLAYER_ID:
+      return {
+        ...state,
+        playerId: action.payload.playerId,
+        // Update isMyTurn based on current player and player ID
+        isMyTurn: state.currentPlayer === action.payload.playerId
+      };
+
+    case GAME_ACTIONS.SYNC_GAME_STATE: {
+      const { gameState } = action.payload;
+      return {
+        ...state,
+        ...gameState,
+        // Preserve local network state
+        networkMode: state.networkMode,
+        connectionStatus: state.connectionStatus,
+        playerId: state.playerId,
+        channelName: state.channelName,
+        // Update isMyTurn based on synced state
+        isMyTurn: gameState.currentPlayer === state.playerId
+      };
+    }
 
     default:
       logger.warn('Unknown action type:', action.type);

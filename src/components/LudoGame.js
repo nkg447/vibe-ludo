@@ -1,6 +1,8 @@
 import React from 'react';
 import Board from './Board/Board';
 import Dice from './Dice/Dice';
+import NetworkManager from './NetworkManager/NetworkManager';
+import NetworkDebugger from './NetworkDebugger/NetworkDebugger';
 import { useGameSelectors, useGameActions } from '../store';
 import './LudoGame.css';
 
@@ -14,7 +16,9 @@ const LudoGame = () => {
     diceValue,
     moveRequired,
     players: gameStatePlayers,
-    winner
+    winner,
+    networkMode,
+    isMyTurn
   } = useGameSelectors();
   
   const {
@@ -51,6 +55,9 @@ const LudoGame = () => {
           <h1>Ludo Game</h1>
           <p>Choose number of players to start the game</p>
         </div>
+        
+        {/* Network Manager for multiplayer options */}
+        <NetworkManager />
         
         <div className="player-selection">
           <h2>Select Number of Players</h2>
@@ -118,10 +125,15 @@ const LudoGame = () => {
           <Dice 
             value={diceValue} 
             onRoll={rollDice}
-            disabled={moveRequired}
+            disabled={moveRequired || (networkMode !== 'LOCAL' && !isMyTurn)}
           />
           <div className="player-turn">
             {getCurrentPlayerInfo().name}'s Turn
+            {networkMode !== 'LOCAL' && (
+              <div className={`turn-indicator ${isMyTurn ? 'my-turn' : 'waiting'}`}>
+                {isMyTurn ? '(Your Turn)' : '(Waiting...)'}
+              </div>
+            )}
             {moveRequired && <div className="move-required">Must move a piece!</div>}
             {winner !== null && (
               <div className="winner-announcement">
@@ -131,6 +143,9 @@ const LudoGame = () => {
           </div>
         </div>
       </div>
+      
+      {/* Network Debugger for development */}
+      <NetworkDebugger />
     </div>
   );
 };

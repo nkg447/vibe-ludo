@@ -1,0 +1,169 @@
+.network-debugger {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  max-height: 400px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.debugger-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.debugger-header h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.debugger-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.debugger-controls button {
+  padding: 4px 8px;
+  font-size: 11px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+}
+
+.debugger-controls button:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.debugger-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.network-state {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.state-item {
+  margin: 3px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.state-item strong {
+  color: #555;
+}
+
+.logs-container {
+  padding: 10px;
+}
+
+.logs-container h4 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #333;
+}
+
+.logs {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  background: #fafafa;
+}
+
+.log-entry {
+  padding: 4px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-timestamp {
+  color: #666;
+  font-size: 10px;
+  flex-shrink: 0;
+  width: 60px;
+}
+
+.log-message {
+  flex: 1;
+  word-break: break-word;
+}
+
+.log-info .log-message {
+  color: #333;
+}
+
+.log-success .log-message {
+  color: #00b894;
+  font-weight: bold;
+}
+
+.log-error .log-message {
+  color: #d63031;
+  font-weight: bold;
+}
+
+.log-turn .log-message {
+  color: #0984e3;
+  font-weight: bold;
+}
+
+.log-status .log-message {
+  color: #6c5ce7;
+  font-weight: bold;
+}
+
+.no-logs {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+}
+
+/* Hide scrollbar but keep functionality */
+.logs::-webkit-scrollbar {
+  width: 4px;
+}
+
+.logs::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.logs::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.logs::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .network-debugger {
+    position: static;
+    width: 100%;
+    margin: 10px 0;
+    max-height: 300px;
+  }
+}

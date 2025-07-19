@@ -31,6 +31,13 @@ export const useGameSelectors = () => {
     moveRequired: gameState.moveRequired,
     consecutiveSixes: gameState.consecutiveSixes,
     
+    // Network selectors
+    networkMode: gameState.networkMode,
+    connectionStatus: gameState.connectionStatus,
+    playerId: gameState.playerId,
+    channelName: gameState.channelName,
+    isMyTurn: gameState.isMyTurn,
+    
     // History selectors
     moveHistory: gameState.moveHistory,
     turnHistory: gameState.turnHistory,
@@ -68,6 +75,13 @@ export const useGameActions = () => {
     rollDice: actions.rollDice,
     movePiece: actions.movePiece,
     switchPlayer: actions.switchPlayer,
+    
+    // Network actions
+    setNetworkMode: actions.setNetworkMode,
+    hostGame: actions.hostGame,
+    joinGame: actions.joinGame,
+    disconnectFromNetwork: actions.disconnectFromNetwork,
+    syncGameState: actions.syncGameState,
     
     // Validation functions
     canMovePiece: (playerIndex, pieceIndex) => 

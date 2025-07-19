@@ -1,0 +1,219 @@
+.network-manager {
+  background: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  max-width: 500px;
+}
+
+.network-status h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.connection-info {
+  background: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.connection-info p {
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+.status {
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.8em;
+}
+
+.status.connecting {
+  background-color: #ffeaa7;
+  color: #636e72;
+}
+
+.status.connected {
+  background-color: #00b894;
+  color: white;
+}
+
+.status.disconnected {
+  background-color: #636e72;
+  color: white;
+}
+
+.status.error {
+  background-color: #d63031;
+  color: white;
+}
+
+.network-options {
+  margin-top: 15px;
+}
+
+.network-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.host-btn, .join-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.host-btn {
+  background-color: #0984e3;
+  color: white;
+}
+
+.host-btn:hover:not(:disabled) {
+  background-color: #0770c0;
+}
+
+.join-btn {
+  background-color: #00b894;
+  color: white;
+}
+
+.join-btn:hover:not(:disabled) {
+  background-color: #00a085;
+}
+
+.host-options, .join-options {
+  background: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+.host-options h4, .join-options h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input-group button {
+  padding: 8px 15px;
+  background-color: #74b9ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.input-group button:hover {
+  background-color: #5a9fff;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.start-hosting-btn, .join-game-btn {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: #00b894;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.start-hosting-btn:hover:not(:disabled), .join-game-btn:hover:not(:disabled) {
+  background-color: #00a085;
+}
+
+.start-hosting-btn:disabled, .join-game-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background-color: #636e72;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #545b61;
+}
+
+.network-controls {
+  margin-top: 15px;
+}
+
+.disconnect-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #d63031;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.disconnect-btn:hover {
+  background-color: #b92d2e;
+}
+
+.error-message {
+  background-color: #ffe6e6;
+  color: #d63031;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .network-manager {
+    margin: 10px 0;
+    padding: 15px;
+  }
+
+  .network-buttons {
+    flex-direction: column;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

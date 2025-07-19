@@ -215,6 +215,24 @@
   text-align: center;
 }
 
+.turn-indicator {
+  font-size: 0.9rem;
+  margin-top: 5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.turn-indicator.my-turn {
+  background-color: #00b894;
+  color: white;
+}
+
+.turn-indicator.waiting {
+  background-color: #ffeaa7;
+  color: #636e72;
+}
+
 .move-required {
   font-size: 0.9rem;
   color: #e74c3c;
