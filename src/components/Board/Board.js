@@ -80,6 +80,7 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
 
   const canMovePiece = (playerIndex, pieceIndex) => {
     if (playerIndex !== currentPlayer) return false;
+    if (diceValue === 0) return false; // No dice rolled yet
     
     const player = gameState.players[playerIndex];
     if (!player) return false;

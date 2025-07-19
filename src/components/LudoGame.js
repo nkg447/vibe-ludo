@@ -64,12 +64,7 @@ const LudoGame = () => {
     console.log('Dice rolled:', newDiceValue, 'Current player:', currentPlayer);
     setDiceValue(newDiceValue);
     
-    // Switch to next player if dice value is not 6
-    if (newDiceValue !== 6) {
-      const nextPlayer = (currentPlayer + 1) % numberOfPlayers;
-      console.log('Switching to next player:', nextPlayer);
-      setCurrentPlayer(nextPlayer);
-    }
+    // Don't switch players here - wait for piece movement
   };
 
   const movePiece = (playerIndex, pieceIndex, newPosition) => {
@@ -80,6 +75,16 @@ const LudoGame = () => {
       console.log('New game state:', newState);
       return newState;
     });
+    
+    // After moving a piece, switch to next player if dice was not 6
+    if (diceValue !== 6) {
+      const nextPlayer = (currentPlayer + 1) % numberOfPlayers;
+      console.log('Switching to next player after move:', nextPlayer);
+      setCurrentPlayer(nextPlayer);
+    }
+    
+    // Reset dice value to prevent multiple moves
+    setDiceValue(0);
   };
 
   const restartGame = () => {
