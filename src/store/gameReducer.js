@@ -91,9 +91,10 @@ export const gameReducer = (state, action) => {
       }
 
       const newDiceValue = rollDiceValue();
-      logger.log('Dice rolled:', newDiceValue, 'Current player:', state.currentPlayer);
+      logger.log('Dice rolled:', newDiceValue, 'Current player:', state.currentPlayer, 'Number of players:', state.numberOfPlayers);
       
       const playerHasValidMoves = hasValidMoves(state, state.currentPlayer, newDiceValue);
+      logger.log('Player has valid moves:', playerHasValidMoves);
       
       let newConsecutiveSixes = state.consecutiveSixes;
       if (newDiceValue === GAME_CONSTANTS.WINNING_DICE_VALUE) {
@@ -102,25 +103,8 @@ export const gameReducer = (state, action) => {
         newConsecutiveSixes = 0;
       }
       
-      // If player rolls 3 consecutive sixes, they lose their turn
-      if (newConsecutiveSixes >= 3) {
-        logger.log('Three consecutive sixes - switching player');
-        const nextPlayer = (state.currentPlayer + 1) % state.numberOfPlayers;
-        return {
-          ...state,
-          currentPlayer: nextPlayer,
-          diceValue: 0,
-          moveRequired: false,
-          consecutiveSixes: 0,
-          turnHistory: [...state.turnHistory, {
-            player: state.currentPlayer,
-            action: 'three_sixes_penalty',
-            timestamp: Date.now()
-          }]
-        };
-      }
-      
       if (playerHasValidMoves) {
+        logger.log('Player has moves, setting moveRequired to true');
         return {
           ...state,
           diceValue: newDiceValue,
@@ -131,6 +115,7 @@ export const gameReducer = (state, action) => {
         // No valid moves, switch to next player
         logger.log('No valid moves available, switching to next player');
         const nextPlayer = (state.currentPlayer + 1) % state.numberOfPlayers;
+        logger.log('Switching from player', state.currentPlayer, 'to player', nextPlayer);
         return {
           ...state,
           currentPlayer: nextPlayer,

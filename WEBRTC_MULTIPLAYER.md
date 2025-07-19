@@ -61,13 +61,16 @@ The game state has been enhanced with:
 
 ### Action Broadcasting
 
-All game actions are automatically broadcasted to connected peers:
+Game actions are selectively broadcasted to connected peers:
 - `START_GAME` - Game initialization
-- `ROLL_DICE` - Dice roll actions
+- `SET_DICE_VALUE` - Dice roll results (instead of ROLL_DICE to prevent multiple random values)
+- `SET_MOVE_REQUIRED` - Move requirement status
 - `MOVE_PIECE` - Piece movement
 - `SWITCH_PLAYER` - Turn switching
 - `CAPTURE_PIECE` - Piece capturing
 - `WIN_GAME` - Game completion
+
+Note: `ROLL_DICE` actions are NOT broadcasted to prevent each peer from generating different random dice values. Instead, only the resulting dice value and game state changes are synchronized.
 
 ### Turn Management
 

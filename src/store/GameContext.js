@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
 import { gameReducer, initialGameState } from './gameReducer';
 import { gameActions } from './gameActions';
 import { NETWORK_MODE, CONNECTION_STATUS } from './gameTypes';
@@ -11,13 +11,17 @@ const GameContext = createContext();
 // Game Context Provider component
 export const GameProvider = ({ children }) => {
   const [gameState, dispatch] = useReducer(gameReducer, initialGameState);
+  const justRolledDice = useRef(false);
 
   // Handle incoming WebRTC actions
   const handleNetworkAction = useCallback((action) => {
-    logger.log('Received network action:', action.type);
+    logger.log('Received network action:', action.type, 'Current network mode:', gameState.networkMode);
     // Only apply network actions if we're in network mode
     if (gameState.networkMode !== NETWORK_MODE.LOCAL) {
+      logger.log('Applying network action:', action.type);
       dispatch(action);
+    } else {
+      logger.log('Ignoring network action in LOCAL mode:', action.type);
     }
   }, [gameState.networkMode]);
 
@@ -43,6 +47,26 @@ export const GameProvider = ({ children }) => {
       webrtcService.broadcastAction(action);
     }
   }, [gameState.networkMode]);
+
+  // Effect to broadcast dice roll results after local dice roll
+  useEffect(() => {
+    if (justRolledDice.current && gameState.networkMode !== NETWORK_MODE.LOCAL) {
+      justRolledDice.current = false;
+      
+      logger.log('Broadcasting dice roll results - diceValue:', gameState.diceValue, 'moveRequired:', gameState.moveRequired, 'currentPlayer:', gameState.currentPlayer);
+      
+      if (gameState.diceValue > 0 && gameState.moveRequired) {
+        // Case 1: Player has valid moves, broadcast dice value and move requirement
+        logger.log('Broadcasting dice value and move requirement for valid moves case');
+        broadcastAction(gameActions.setDiceValue(gameState.diceValue));
+        broadcastAction(gameActions.setMoveRequired(true));
+      } else if (gameState.diceValue === 0) {
+        // Case 2: No valid moves, player was auto-switched, broadcast the switch
+        logger.log('No valid moves - broadcasting player switch to:', gameState.currentPlayer);
+        broadcastAction(gameActions.switchPlayer(gameState.currentPlayer));
+      }
+    }
+  }, [gameState.diceValue, gameState.moveRequired, gameState.currentPlayer, gameState.networkMode, broadcastAction]);
 
   // Enhanced action dispatchers with logging, validation, and network broadcasting
   const actions = {
@@ -134,10 +158,17 @@ export const GameProvider = ({ children }) => {
         return false;
       }
       
-      logger.log('Rolling dice for player', gameState.currentPlayer);
+      logger.log('Rolling dice for player', gameState.currentPlayer, 'Network mode:', gameState.networkMode);
+      
+      // Set flag to indicate we just rolled dice locally
+      justRolledDice.current = true;
+      
+      // Dispatch the ROLL_DICE action locally only (not broadcasted)
+      // The dice value will be generated and the effect above will broadcast the result
       const action = gameActions.rollDice();
+      logger.log('Dispatching dice roll action locally only');
       dispatch(action);
-      broadcastAction(action);
+      
       return true;
     },
 
@@ -165,7 +196,8 @@ export const GameProvider = ({ children }) => {
     setMoveRequired: (required) => {
       const action = gameActions.setMoveRequired(required);
       dispatch(action);
-      broadcastAction(action);
+      // Note: We don't broadcast this automatically anymore since it's handled 
+      // specifically in the dice roll result broadcasting
     },
 
     // Direct state updates (for advanced usage)
