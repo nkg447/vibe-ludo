@@ -120,12 +120,17 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       (col === 7 && (row === 0 || row === 14))
     );
     
-    // Define safe zones (colored squares) - at starting positions
+    // Define safe zones (colored squares) - at starting positions and 8th positions
     const isSafeZone = (
       (row === 6 && col === 1) || // Red starting position
       (row === 13 && col === 6) || // Blue starting position  
       (row === 8 && col === 13) || // Yellow starting position
-      (row === 1 && col === 8)   // Green starting position
+      (row === 1 && col === 8) ||   // Green starting position
+      // 8th positions after each starting point
+      (row === 2 && col === 6) || // Red 8th position
+      (row === 8 && col === 2) || // Blue 8th position
+      (row === 12 && col === 8) || // Yellow 8th position
+      (row === 6 && col === 12)   // Green 8th position
     );
     
     // Get safe zone color based on position
@@ -134,6 +139,11 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       if (row === 13 && col === 6) return 'blue-safe';
       if (row === 8 && col === 13) return 'yellow-safe';
       if (row === 1 && col === 8) return 'green-safe';
+      // 8th position safe zones
+      if (row === 2 && col === 6) return 'red-safe';
+      if (row === 8 && col === 2) return 'blue-safe';
+      if (row === 12 && col === 8) return 'yellow-safe';
+      if (row === 6 && col === 12) return 'green-safe';
       return '';
     };
     
@@ -164,43 +174,67 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
       });
     });
     
-    // Add home pieces
+    // Add home pieces - map player indices to correct positions
+    const getPlayerByColor = (color) => {
+      return gameState.players.find(player => player.color === color);
+    };
+    
+    const getPlayerIndexByColor = (color) => {
+      return gameState.players.findIndex(player => player.color === color);
+    };
+    
     if (isRedHome && row >= 2 && row <= 4 && col >= 2 && col <= 4) {
-      const homeIndex = (row - 2) * 3 + (col - 2);
-      if (homeIndex < 4) {
-        const piece = gameState.players[0].pieces[homeIndex];
-        if (piece === 0) {
-          piecesOnCell.push({ playerIndex: 0, pieceIndex: homeIndex, color: 'red' });
+      const redPlayer = getPlayerByColor('red');
+      const redPlayerIndex = getPlayerIndexByColor('red');
+      if (redPlayer) {
+        const homeIndex = (row - 2) * 3 + (col - 2);
+        if (homeIndex < 4) {
+          const piece = redPlayer.pieces[homeIndex];
+          if (piece === 0) {
+            piecesOnCell.push({ playerIndex: redPlayerIndex, pieceIndex: homeIndex, color: 'red' });
+          }
         }
       }
     }
     
     if (isBlueHome && row >= 10 && row <= 12 && col >= 2 && col <= 4) {
-      const homeIndex = (row - 10) * 3 + (col - 2);
-      if (homeIndex < 4) {
-        const piece = gameState.players[1].pieces[homeIndex];
-        if (piece === 0) {
-          piecesOnCell.push({ playerIndex: 1, pieceIndex: homeIndex, color: 'blue' });
+      const bluePlayer = getPlayerByColor('blue');
+      const bluePlayerIndex = getPlayerIndexByColor('blue');
+      if (bluePlayer) {
+        const homeIndex = (row - 10) * 3 + (col - 2);
+        if (homeIndex < 4) {
+          const piece = bluePlayer.pieces[homeIndex];
+          if (piece === 0) {
+            piecesOnCell.push({ playerIndex: bluePlayerIndex, pieceIndex: homeIndex, color: 'blue' });
+          }
         }
       }
     }
     
     if (isYellowHome && row >= 10 && row <= 12 && col >= 10 && col <= 12) {
-      const homeIndex = (row - 10) * 3 + (col - 10);
-      if (homeIndex < 4) {
-        const piece = gameState.players[2].pieces[homeIndex];
-        if (piece === 0) {
-          piecesOnCell.push({ playerIndex: 2, pieceIndex: homeIndex, color: 'yellow' });
+      const yellowPlayer = getPlayerByColor('yellow');
+      const yellowPlayerIndex = getPlayerIndexByColor('yellow');
+      if (yellowPlayer) {
+        const homeIndex = (row - 10) * 3 + (col - 10);
+        if (homeIndex < 4) {
+          const piece = yellowPlayer.pieces[homeIndex];
+          if (piece === 0) {
+            piecesOnCell.push({ playerIndex: yellowPlayerIndex, pieceIndex: homeIndex, color: 'yellow' });
+          }
         }
       }
     }
     
     if (isGreenHome && row >= 2 && row <= 4 && col >= 10 && col <= 12) {
-      const homeIndex = (row - 2) * 3 + (col - 10);
-      if (homeIndex < 4) {
-        const piece = gameState.players[3].pieces[homeIndex];
-        if (piece === 0) {
-          piecesOnCell.push({ playerIndex: 3, pieceIndex: homeIndex, color: 'green' });
+      const greenPlayer = getPlayerByColor('green');
+      const greenPlayerIndex = getPlayerIndexByColor('green');
+      if (greenPlayer) {
+        const homeIndex = (row - 2) * 3 + (col - 10);
+        if (homeIndex < 4) {
+          const piece = greenPlayer.pieces[homeIndex];
+          if (piece === 0) {
+            piecesOnCell.push({ playerIndex: greenPlayerIndex, pieceIndex: homeIndex, color: 'green' });
+          }
         }
       }
     }
