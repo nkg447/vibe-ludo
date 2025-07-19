@@ -1,4 +1,5 @@
 import React from 'react';
+import logger from '../../logger';
 import './Board.css';
 
 const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
@@ -97,25 +98,25 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
   };
 
   const handlePieceClick = (playerIndex, pieceIndex) => {
-    console.log('Piece clicked:', { playerIndex, pieceIndex, currentPlayer, diceValue });
+    logger.log('Piece clicked:', { playerIndex, pieceIndex, currentPlayer, diceValue });
     
     if (!canMovePiece(playerIndex, pieceIndex)) {
-      console.log('Cannot move this piece');
+      logger.log('Cannot move this piece');
       return;
     }
     
     const player = gameState.players[playerIndex];
     const currentPosition = player.pieces[pieceIndex];
-    console.log('Current position:', currentPosition);
+    logger.log('Current position:', currentPosition);
     
     // If piece is at home (position 0) and dice is 6, move to start position
     if (currentPosition === 0 && diceValue === 6) {
-      console.log('Moving piece from home to start');
+      logger.log('Moving piece from home to start');
       onMovePiece(playerIndex, pieceIndex, 1);
     } else if (currentPosition > 0 && diceValue > 0) {
       // Move piece forward by dice value
       const newPosition = Math.min(currentPosition + diceValue, 57);
-      console.log('Moving piece from', currentPosition, 'to', newPosition);
+      logger.log('Moving piece from', currentPosition, 'to', newPosition);
       onMovePiece(playerIndex, pieceIndex, newPosition);
     }
   };

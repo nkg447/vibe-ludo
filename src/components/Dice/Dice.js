@@ -1,4 +1,5 @@
 import React from 'react';
+import logger from '../../logger';
 import './Dice.css';
 
 const Dice = ({ value, onRoll, disabled }) => {
@@ -16,6 +17,7 @@ const Dice = ({ value, onRoll, disabled }) => {
 
   const handleRoll = () => {
     if (!disabled) {
+      logger.log('Rolling dice');
       onRoll();
     }
   };

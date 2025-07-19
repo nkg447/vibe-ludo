@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Board from './Board/Board';
 import Dice from './Dice/Dice';
+import logger from '../logger';
 import './LudoGame.css';
 
 const LudoGame = () => {
@@ -65,12 +66,12 @@ const LudoGame = () => {
   const rollDice = () => {
     // Prevent rolling if a move is required
     if (moveRequired) {
-      console.log('Cannot roll dice - must move a piece first');
+      logger.log('Cannot roll dice - must move a piece first');
       return;
     }
     
     const newDiceValue = Math.floor(Math.random() * 6) + 1;
-    console.log('Dice rolled:', newDiceValue, 'Current player:', currentPlayer);
+    logger.log('Dice rolled:', newDiceValue, 'Current player:', currentPlayer);
     setDiceValue(newDiceValue);
     
     // Check if current player has any valid moves after rolling
@@ -87,11 +88,11 @@ const LudoGame = () => {
         
         if (hasValidMoves) {
           // Player has valid moves, require them to move a piece
-          console.log('Player has valid moves, requiring piece movement');
+          logger.log('Player has valid moves, requiring piece movement');
           setMoveRequired(true);
         } else {
           // No valid moves, switch to next player automatically
-          console.log('No valid moves available, switching to next player');
+          logger.log('No valid moves available, switching to next player');
           const nextPlayer = (currentPlayer + 1) % numberOfPlayers;
           setCurrentPlayer(nextPlayer);
           setDiceValue(0);
@@ -102,11 +103,11 @@ const LudoGame = () => {
   };
 
   const movePiece = (playerIndex, pieceIndex, newPosition) => {
-    console.log('Moving piece:', { playerIndex, pieceIndex, newPosition });
+    logger.log('Moving piece:', { playerIndex, pieceIndex, newPosition });
     setGameState(prevState => {
       const newState = { ...prevState };
       newState.players[playerIndex].pieces[pieceIndex] = newPosition;
-      console.log('New game state:', newState);
+      logger.log('New game state:', newState);
       return newState;
     });
     
@@ -116,7 +117,7 @@ const LudoGame = () => {
     // After moving a piece, switch to next player if dice was not 6
     if (diceValue !== 6) {
       const nextPlayer = (currentPlayer + 1) % numberOfPlayers;
-      console.log('Switching to next player after move:', nextPlayer);
+      logger.log('Switching to next player after move:', nextPlayer);
       setCurrentPlayer(nextPlayer);
     }
     
