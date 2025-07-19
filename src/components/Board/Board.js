@@ -78,18 +78,43 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
     return paths[color] || [];
   };
 
+  const canMovePiece = (playerIndex, pieceIndex) => {
+    if (playerIndex !== currentPlayer) return false;
+    
+    const player = gameState.players[playerIndex];
+    if (!player) return false;
+    
+    const currentPosition = player.pieces[pieceIndex];
+    
+    // Can move from home only with a 6
+    if (currentPosition === 0) return diceValue === 6;
+    
+    // Can move pieces already on the board
+    if (currentPosition > 0) return diceValue > 0;
+    
+    return false;
+  };
+
   const handlePieceClick = (playerIndex, pieceIndex) => {
-    if (playerIndex !== currentPlayer) return;
+    console.log('Piece clicked:', { playerIndex, pieceIndex, currentPlayer, diceValue });
+    
+    if (!canMovePiece(playerIndex, pieceIndex)) {
+      console.log('Cannot move this piece');
+      return;
+    }
     
     const player = gameState.players[playerIndex];
     const currentPosition = player.pieces[pieceIndex];
+    console.log('Current position:', currentPosition);
     
     // If piece is at home (position 0) and dice is 6, move to start position
     if (currentPosition === 0 && diceValue === 6) {
+      console.log('Moving piece from home to start');
       onMovePiece(playerIndex, pieceIndex, 1);
-    } else if (currentPosition > 0) {
+    } else if (currentPosition > 0 && diceValue > 0) {
       // Move piece forward by dice value
       const newPosition = Math.min(currentPosition + diceValue, 57);
+      console.log('Moving piece from', currentPosition, 'to', newPosition);
       onMovePiece(playerIndex, pieceIndex, newPosition);
     }
   };
@@ -264,6 +289,8 @@ const Board = ({ gameState, currentPlayer, diceValue, onMovePiece }) => {
             key={`${piece.playerIndex}-${piece.pieceIndex}`}
             className={`game-piece ${piece.color}-piece ${
               piece.playerIndex === currentPlayer ? 'current-player-piece' : ''
+            } ${
+              canMovePiece(piece.playerIndex, piece.pieceIndex) ? 'movable-piece' : ''
             }`}
             onClick={() => handlePieceClick(piece.playerIndex, piece.pieceIndex)}
             style={{

@@ -61,18 +61,23 @@ const LudoGame = () => {
 
   const rollDice = () => {
     const newDiceValue = Math.floor(Math.random() * 6) + 1;
+    console.log('Dice rolled:', newDiceValue, 'Current player:', currentPlayer);
     setDiceValue(newDiceValue);
     
     // Switch to next player if dice value is not 6
     if (newDiceValue !== 6) {
-      setCurrentPlayer((prev) => (prev + 1) % numberOfPlayers);
+      const nextPlayer = (currentPlayer + 1) % numberOfPlayers;
+      console.log('Switching to next player:', nextPlayer);
+      setCurrentPlayer(nextPlayer);
     }
   };
 
   const movePiece = (playerIndex, pieceIndex, newPosition) => {
+    console.log('Moving piece:', { playerIndex, pieceIndex, newPosition });
     setGameState(prevState => {
       const newState = { ...prevState };
       newState.players[playerIndex].pieces[pieceIndex] = newPosition;
+      console.log('New game state:', newState);
       return newState;
     });
   };
