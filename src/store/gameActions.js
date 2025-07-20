@@ -77,5 +77,21 @@ export const gameActions = {
   syncGameState: (gameState) => ({
     type: GAME_ACTIONS.SYNC_GAME_STATE,
     payload: { gameState }
+  }),
+
+  // Audio actions
+  playAudio: (trackFile, playerId) => ({
+    type: GAME_ACTIONS.PLAY_AUDIO,
+    payload: { trackFile, playerId }
+  }),
+
+  pauseAudio: (playerId) => ({
+    type: GAME_ACTIONS.PAUSE_AUDIO,
+    payload: { playerId }
+  }),
+
+  stopAudio: (playerId) => ({
+    type: GAME_ACTIONS.STOP_AUDIO,
+    payload: { playerId }
   })
 };

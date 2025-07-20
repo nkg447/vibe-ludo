@@ -226,6 +226,28 @@ export const GameProvider = ({ children }) => {
       const action = gameActions.winGame(winnerIndex);
       dispatch(action);
       broadcastAction(action);
+    },
+
+    // Audio actions
+    playAudio: (trackFile) => {
+      logger.log('Playing audio track:', trackFile, 'by player:', gameState.playerId);
+      const action = gameActions.playAudio(trackFile, gameState.playerId);
+      dispatch(action);
+      broadcastAction(action);
+    },
+
+    pauseAudio: () => {
+      logger.log('Pausing audio by player:', gameState.playerId);
+      const action = gameActions.pauseAudio(gameState.playerId);
+      dispatch(action);
+      broadcastAction(action);
+    },
+
+    stopAudio: () => {
+      logger.log('Stopping audio by player:', gameState.playerId);
+      const action = gameActions.stopAudio(gameState.playerId);
+      dispatch(action);
+      broadcastAction(action);
     }
   };
 

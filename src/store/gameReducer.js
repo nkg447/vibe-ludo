@@ -37,7 +37,12 @@ export const initialGameState = {
   connectionStatus: CONNECTION_STATUS.DISCONNECTED,
   playerId: null,
   channelName: null,
-  isMyTurn: true // For local games, always true initially
+  isMyTurn: true, // For local games, always true initially
+
+  // Audio state
+  currentAudioTrack: null,
+  isAudioPlaying: false,
+  audioPlayedBy: null
 };
 
 // Game reducer
@@ -342,6 +347,28 @@ export const gameReducer = (state, action) => {
         isMyTurn: gameState.currentPlayer === state.playerId
       };
     }
+
+    case GAME_ACTIONS.PLAY_AUDIO:
+      return {
+        ...state,
+        currentAudioTrack: action.payload.trackFile,
+        isAudioPlaying: true,
+        audioPlayedBy: action.payload.playerId
+      };
+
+    case GAME_ACTIONS.PAUSE_AUDIO:
+      return {
+        ...state,
+        isAudioPlaying: false
+      };
+
+    case GAME_ACTIONS.STOP_AUDIO:
+      return {
+        ...state,
+        currentAudioTrack: null,
+        isAudioPlaying: false,
+        audioPlayedBy: null
+      };
 
     default:
       logger.warn('Unknown action type:', action.type);

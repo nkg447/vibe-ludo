@@ -31,6 +31,8 @@ Action creators for:
 - Game lifecycle (start, restart, setup)
 - Turn management (roll dice, move pieces, switch players)
 - Game state updates (piece positions, captures, wins)
+- Audio control (play, pause, stop audio tracks)
+- Network synchronization (WebRTC multiplayer)
 
 ### 3. Game Reducer (`gameReducer.js`)
 Central reducer handling all game state transitions:
@@ -39,6 +41,8 @@ Central reducer handling all game state transitions:
 - Piece movement and capture logic
 - Win condition checking
 - Turn switching logic
+- Audio state management and synchronization
+- Network game state coordination
 
 ### 4. Game Utils (`gameUtils.js`)
 Utility functions for:
@@ -52,6 +56,8 @@ Utility functions for:
 - React Context provider wrapping the entire game
 - Enhanced action dispatchers with logging
 - Centralized state and action access
+- WebRTC network action broadcasting
+- Audio synchronization across connected players
 
 ### 6. Game Hooks (`gameHooks.js`)
 Custom hooks for components:
@@ -66,8 +72,22 @@ Custom hooks for components:
 import { useGameSelectors, useGameActions } from '../store';
 
 const MyComponent = () => {
-  const { isGameStarted, currentPlayer, diceValue } = useGameSelectors();
-  const { rollDice, movePiece, startGame } = useGameActions();
+  const { 
+    isGameStarted, 
+    currentPlayer, 
+    diceValue,
+    currentAudioTrack,
+    isAudioPlaying 
+  } = useGameSelectors();
+  
+  const { 
+    rollDice, 
+    movePiece, 
+    startGame,
+    playAudio,
+    pauseAudio,
+    stopAudio 
+  } = useGameActions();
   
   // Component logic here
 };
@@ -105,9 +125,58 @@ const MyComponent = () => {
   
   // Game end
   winner: number | null,
-  gameEndTime: number | null
+  gameEndTime: number | null,
+  
+  // Network state (WebRTC multiplayer)
+  networkMode: 'LOCAL' | 'HOST' | 'GUEST',
+  connectionStatus: 'DISCONNECTED' | 'CONNECTING' | 'CONNECTED' | 'ERROR',
+  playerId: number | null,
+  channelName: string | null,
+  isMyTurn: boolean,
+  
+  // Audio state
+  currentAudioTrack: string | null,
+  isAudioPlaying: boolean,
+  audioPlayedBy: number | null
 }
 ```
+
+## Audio State Management
+
+### Audio Actions
+The system supports three main audio actions that are synchronized across all connected players:
+
+```javascript
+// Play audio track
+actions.playAudio(trackFile);  // Broadcasts to all players
+
+// Pause current audio
+actions.pauseAudio();  // Syncs pause state
+
+// Stop current audio
+actions.stopAudio();   // Syncs stop state
+```
+
+### Audio State Structure
+```javascript
+{
+  currentAudioTrack: 'filename.mp3' | null,  // Currently playing track
+  isAudioPlaying: boolean,                   // Playing state
+  audioPlayedBy: number | null               // Player who initiated audio
+}
+```
+
+### Network Synchronization
+- Audio state is automatically synchronized across all connected players
+- When one player plays audio, all players hear the same track
+- Player attribution shows who initiated the audio playback
+- Audio controls are available to all players (democratic audio control)
+
+### Implementation Details
+1. **Action Broadcasting**: Audio actions are broadcast via WebRTC
+2. **State Synchronization**: Audio state is maintained in the central game state
+3. **Player Attribution**: Tracks which player initiated audio playback
+4. **Auto-sync**: Remote audio state changes automatically update local audio player
 
 ## Key Features
 
@@ -144,12 +213,16 @@ const MyComponent = () => {
 3. **Consecutive Sixes**: Prevent infinite turns
 4. **Win Detection**: Automatic game end detection
 5. **Player Statistics**: Track individual player performance
+6. **Audio Broadcasting**: Synchronized audio playback across players
+7. **Network Multiplayer**: Real-time game state synchronization
 
 ### Validation Logic
 - Move validation before state updates
 - Turn switching based on game rules
 - Piece capture detection
 - Win condition checking
+- Audio state consistency across network players
+- Network action validation and synchronization
 
 ## Benefits of This Architecture
 
@@ -162,9 +235,11 @@ const MyComponent = () => {
 ## Future Enhancements
 
 The state management system is designed to easily support:
-- Multiplayer online gameplay
+- Enhanced multiplayer features (rooms, lobbies)
 - Game persistence and loading
-- Replay functionality
+- Replay functionality with audio
 - AI players
 - Custom game rules
 - Tournament mode
+- Voice chat integration
+- Advanced audio features (playlists, sound effects)

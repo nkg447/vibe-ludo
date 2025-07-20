@@ -1,12 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './AudioPlayer.css';
+import { useGame } from '../../store/GameContext';
 
 const AudioPlayer = () => {
+  const { gameState, actions } = useGame();
   const [isOpen, setIsOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('');
   const audioRef = useRef(null);
+
+  // Use game state for audio status
+  const isPlaying = gameState.isAudioPlaying;
+  const currentAudio = gameState.currentAudioTrack;
+  const audioPlayedBy = gameState.audioPlayedBy;
 
   // Available audio tracks
   const audioTracks = [
@@ -32,8 +37,24 @@ const AudioPlayer = () => {
     }
   ];
 
+  // Effect to handle remote audio state changes
+  useEffect(() => {
+    if (currentAudio && isPlaying && audioRef.current) {
+      // If audio is supposed to be playing but not locally initiated
+      if (audioRef.current.src !== `./assets/audio/${currentAudio}` || audioRef.current.paused) {
+        audioRef.current.src = `./assets/audio/${currentAudio}`;
+        audioRef.current.load();
+        audioRef.current.play()
+          .catch(err => console.error('Error playing remote audio:', err));
+      }
+    } else if (!isPlaying && audioRef.current && !audioRef.current.paused) {
+      // If audio should be paused
+      audioRef.current.pause();
+    }
+  }, [currentAudio, isPlaying]);
+
   const handleAudioEnd = () => {
-    setIsPlaying(false);
+    actions.stopAudio();
   };
 
   const handleTrackSelect = (trackFile) => {
@@ -41,18 +62,10 @@ const AudioPlayer = () => {
     
     if (currentAudio === trackFile && isPlaying) {
       // If the same track is playing, pause it
-      audioRef.current?.pause();
-      setIsPlaying(false);
+      actions.pauseAudio();
     } else {
       // Play the selected track
-      setCurrentAudio(trackFile);
-      if (audioRef.current) {
-        audioRef.current.src = `./assets/audio/${trackFile}`;
-        audioRef.current.load();
-        audioRef.current.play()
-          .then(() => setIsPlaying(true))
-          .catch(err => console.error('Error playing audio:', err));
-      }
+      actions.playAudio(trackFile);
     }
   };
 
@@ -94,6 +107,21 @@ const AudioPlayer = () => {
               ))}
             </div>
           </div>
+
+          {currentAudio && (
+            <div className="current-track">
+              <p>
+                🎵 {audioTracks.find(t => t.file === currentAudio)?.name}
+                {audioPlayedBy !== null && gameState.networkMode !== 'LOCAL' && (
+                  <span className="played-by">
+                    {audioPlayedBy === gameState.playerId ? ' (You)' : ` (Player ${audioPlayedBy + 1})`}
+                  </span>
+                )}
+              </p>
+              {isPlaying && <div className="playing-indicator">🎶 Now Playing</div>}
+            </div>
+          )}
+
           <audio
             ref={audioRef}
             onEnded={handleAudioEnd}

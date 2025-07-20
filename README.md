@@ -29,6 +29,7 @@ This is a complete implementation of the classic Ludo board game, supporting 2-4
 - **Modern React Architecture**: Hooks, Context API, and functional components
 - **Advanced State Management**: Custom Redux-like pattern with useReducer
 - **Responsive Design**: Mobile-friendly layout
+- **Audio Player**: Built-in audio player with Bollywood comedy sound clips
 - **Game Statistics**: Move tracking, player statistics, and game history
 - **Debug Logging**: Development mode logging for debugging
 - **Type Safety**: Well-defined action types and constants
@@ -44,6 +45,9 @@ src/
 ├── components/
 │   ├── LudoGame.js        # Main game component with setup and game screens
 │   ├── LudoGame.css       # Game layout and styling
+│   ├── AudioPlayer/
+│   │   ├── AudioPlayer.js # Audio player with Bollywood comedy clips
+│   │   └── AudioPlayer.css # Audio player styling
 │   ├── Board/
 │   │   ├── Board.js       # Game board component (15x15 grid)
 │   │   └── Board.css      # Board styling with colors and animations
@@ -63,6 +67,35 @@ src/
     └── gameHooks.js      # Custom hooks for components
 ```
 
+## 🎵 Audio Player
+
+The game includes a built-in audio player featuring popular Bollywood comedy sound clips for enhanced entertainment:
+
+### Audio Features
+- **Collapsible Player**: Toggle audio panel with music note button (🎵)
+- **Direct Play**: Click on any track name to play immediately
+- **Pause/Resume**: Click the same playing track to pause/resume
+- **Track Switching**: Seamlessly switch between different audio clips
+- **Visual Feedback**: Playing tracks show music note emoji and "(Playing)" indicator
+- **Auto-end Handling**: Tracks automatically stop when finished
+- **Multiplayer Sync**: Audio broadcasts to all connected players in real-time
+- **Player Attribution**: Shows which player initiated the audio in network games
+
+### Available Tracks
+- **Chup chup chup bilkul chup**: Classic comedy dialogue
+- **Unchi Pehchan**: "Is ka liya bari unchi pehchan chahiye unchi ponch chaiya"
+- **Khopri Tor**: "Khopri tor khopri tor salay ka"
+- **Pakad Mera Ko**: "Pakad mera ko mero ko janta ni hai ya"
+- **Baburao Style**: "ye baburao ka style hai"
+
+### Usage
+1. Click the 🎵 button to open the audio player
+2. Click on any track name to start playing (broadcasts to all players)
+3. Click the same track again to pause (synced across all players)
+4. Click a different track to switch audio (immediately synced)
+5. Audio shows who initiated playback in multiplayer games
+6. Use the ✕ button to close the player
+
 ## 🛠️ State Management Architecture
 
 The game uses a sophisticated state management system built on React Context and useReducer:
@@ -73,6 +106,7 @@ The game uses a sophisticated state management system built on React Context and
 - **gameHooks**: Custom hooks for component integration
 - **gameUtils**: Pure functions for game calculations
 - **gameTypes**: Type definitions and constants
+- **Audio State**: Manages synchronized audio playback across network players
 
 ### Custom Hooks:
 - `useGameSelectors()`: Access game state with computed values
