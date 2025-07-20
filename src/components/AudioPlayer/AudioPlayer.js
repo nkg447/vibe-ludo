@@ -79,6 +79,13 @@ const AudioPlayer = () => {
         🎵
       </button>
 
+      {/* Audio element always present for remote playback */}
+      <audio
+        ref={audioRef}
+        onEnded={handleAudioEnd}
+        preload="none"
+      />
+
       {isOpen && (
         <div className="audio-panel">
           <div className="audio-header">
@@ -121,12 +128,6 @@ const AudioPlayer = () => {
               {isPlaying && <div className="playing-indicator">🎶 Now Playing</div>}
             </div>
           )}
-
-          <audio
-            ref={audioRef}
-            onEnded={handleAudioEnd}
-            preload="none"
-          />
         </div>
       )}
     </div>
