@@ -1,5 +1,5 @@
 import { useGame } from './GameContext';
-import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone } from './gameUtils';
+import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone, isRedPieceArea, isYellowPieceArea, isGreenPieceArea, isBluePieceArea } from './gameUtils';
 import { GAME_STATUS, GAME_CONSTANTS } from './gameTypes';
 
 // Custom hooks for game functionality
@@ -204,23 +204,23 @@ export const useBoardLogic = () => {
       
       switch (color) {
         case 'red':
-          if (row >= 2 && row <= 3 && col >= 2 && col <= 3) {
-            homeIndex = (row - 2) * 2 + (col - 2);
+          if (isRedPieceArea(row, col)) {
+            homeIndex = (row === 1 ? 0 : 1) + 2 * (col === 1 ? 0 : 1);
           }
           break;
         case 'blue':
-          if (row >= 11 && row <= 12 && col >= 2 && col <= 3) {
-            homeIndex = (row - 11) * 2 + (col - 2);
+          if (isBluePieceArea(row, col)) {
+            homeIndex = (row === 10 ? 0 : 1) + 2 * (col === 1 ? 0 : 1);
           }
           break;
         case 'yellow':
-          if (row >= 11 && row <= 12 && col >= 11 && col <= 12) {
-            homeIndex = (row - 11) * 2 + (col - 11);
+          if (isYellowPieceArea(row, col)) {
+            homeIndex = (row === 10 ? 0 : 1) + 2 * (col === 10 ? 0 : 1);
           }
           break;
         case 'green':
-          if (row >= 2 && row <= 3 && col >= 11 && col <= 12) {
-            homeIndex = (row - 2) * 2 + (col - 11);
+          if (isGreenPieceArea(row, col)) {
+            homeIndex = (row === 1 ? 0 : 1) + 2 * (col === 10 ? 0 : 1);
           }
           break;
         default:

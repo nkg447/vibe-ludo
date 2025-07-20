@@ -208,3 +208,8 @@ export const findCapturablePieces = (gameState, targetRow, targetCol, movingPlay
 export const rollDiceValue = () => {
   return Math.floor(Math.random() * 6) + 1;
 };
+
+export const isRedPieceArea = (row, col) => (row === 1 || row === 4) && (col === 1 || col === 4);
+export const isBluePieceArea = (row, col) => (row === 10 || row === 13) && (col === 1 || col === 4);
+export const isYellowPieceArea = (row, col) => (row === 10 || row === 13) && (col === 10 || col === 13);
+export const isGreenPieceArea = (row, col) => (row === 1 || row === 4) && (col === 10 || col === 13);

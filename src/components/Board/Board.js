@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGameActions, useBoardLogic } from '../../store';
 import './Board.css';
-import { isSafeZone } from '../../store/gameUtils';
+import { isRedPieceArea, isBluePieceArea, isGreenPieceArea, isYellowPieceArea, isSafeZone } from '../../store/gameUtils';
 
 const Board = ({ gameState, currentPlayer, diceValue }) => {
   // Board layout - 15x15 grid
@@ -16,16 +16,10 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
     let cellClass = 'board-cell';
     
     // Define home areas
-    const isRedHome = row >= 1 && row <= 5 && col >= 1 && col <= 5;
-    const isBlueHome = row >= 9 && row <= 13 && col >= 1 && col <= 5;
-    const isYellowHome = row >= 9 && row <= 13 && col >= 9 && col <= 13;
-    const isGreenHome = row >= 1 && row <= 5 && col >= 9 && col <= 13;
-    
-    // Define specific piece positions within homes (2x2 grid in center of each home)
-    const isRedPieceArea = row >= 2 && row <= 3 && col >= 2 && col <= 3;
-    const isBluePieceArea = row >= 11 && row <= 12 && col >= 2 && col <= 3;
-    const isYellowPieceArea = row >= 11 && row <= 12 && col >= 11 && col <= 12;
-    const isGreenPieceArea = row >= 2 && row <= 3 && col >= 11 && col <= 12;
+    const isRedHome = row >= 0 && row <= 5 && col >= 0 && col <= 5;
+    const isBlueHome = row >= 9 && row <= 14 && col >= 0 && col <= 5;
+    const isYellowHome = row >= 9 && row <= 14 && col >= 9 && col <= 14;
+    const isGreenHome = row >= 0 && row <= 5 && col >= 9 && col <= 14;
     
     // Define path cells
     const isPath = (
@@ -56,19 +50,19 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
     
     if (isRedHome) {
       cellClass += ' red-home';
-      if (isRedPieceArea) cellClass += ' piece-area';
+      if (isRedPieceArea(row, col)) cellClass += ' piece-area';
     }
     else if (isBlueHome) {
       cellClass += ' blue-home';
-      if (isBluePieceArea) cellClass += ' piece-area';
+      if (isBluePieceArea(row, col)) cellClass += ' piece-area';
     }
     else if (isYellowHome) {
       cellClass += ' yellow-home';
-      if (isYellowPieceArea) cellClass += ' piece-area';
+      if (isYellowPieceArea(row, col)) cellClass += ' piece-area';
     }
     else if (isGreenHome) {
       cellClass += ' green-home';
-      if (isGreenPieceArea) cellClass += ' piece-area';
+      if (isGreenPieceArea(row, col)) cellClass += ' piece-area';
     }
     else if (isCenter) cellClass += ' center';
     else if (isPath) cellClass += ' path';
@@ -84,16 +78,16 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
     
     // Add home pieces - use the new logic
     const homePieces = [];
-    if (isRedPieceArea) {
+    if (isRedPieceArea(row, col)) {
       homePieces.push(...getHomePieces('red', row, col));
     }
-    if (isBluePieceArea) {
+    if (isBluePieceArea(row, col)) {
       homePieces.push(...getHomePieces('blue', row, col));
     }
-    if (isYellowPieceArea) {
+    if (isYellowPieceArea(row, col)) {
       homePieces.push(...getHomePieces('yellow', row, col));
     }
-    if (isGreenPieceArea) {
+    if (isGreenPieceArea(row, col)) {
       homePieces.push(...getHomePieces('green', row, col));
     }
     
