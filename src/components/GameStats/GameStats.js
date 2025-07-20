@@ -71,6 +71,9 @@ const GameStats = () => {
                 </span>
                 {' '}moved piece {move.pieceIndex + 1} from {move.from} to {move.to}
                 {' '}(dice: {move.diceValue})
+                {move.capturedPieces > 0 && (
+                  <span className="capture-indicator"> ⚔️ {move.capturedPieces} captured!</span>
+                )}
               </div>
             ))}
           </div>

@@ -90,6 +90,12 @@
   border-bottom: none;
 }
 
+.capture-indicator {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .game-stats {

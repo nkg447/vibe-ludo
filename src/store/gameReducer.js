@@ -1,5 +1,5 @@
 import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS, NETWORK_MODE, CONNECTION_STATUS } from './gameTypes';
-import { hasValidMoves, hasPlayerWon, rollDiceValue } from './gameUtils';
+import { hasValidMoves, hasPlayerWon, rollDiceValue, findCapturablePieces, getPiecePosition } from './gameUtils';
 import logger from '../logger';
 
 // Initial game state
@@ -139,13 +139,43 @@ export const gameReducer = (state, action) => {
       
       const newPlayers = [...state.players];
       const oldPosition = newPlayers[playerIndex].pieces[pieceIndex];
+      
+      // Get the target position on the board
+      const player = newPlayers[playerIndex];
+      const targetBoardPosition = getPiecePosition(player.color, newPosition);
+      
+      // Check for captures before moving the piece
+      let capturedPieces = [];
+      if (targetBoardPosition) {
+        const [targetRow, targetCol] = targetBoardPosition;
+        capturedPieces = findCapturablePieces(state, targetRow, targetCol, playerIndex);
+      }
+      
+      // Move the piece
       newPlayers[playerIndex].pieces[pieceIndex] = newPosition;
+      
+      // Handle captures
+      let captureHistory = [];
+      capturedPieces.forEach(capturedPiece => {
+        logger.log('Capturing piece:', capturedPiece);
+        // Send captured piece back to home
+        newPlayers[capturedPiece.playerIndex].pieces[capturedPiece.pieceIndex] = GAME_CONSTANTS.HOME_POSITION;
+        
+        captureHistory.push({
+          action: 'piece_captured',
+          capturedPlayer: capturedPiece.playerIndex,
+          capturedPiece: capturedPiece.pieceIndex,
+          capturingPlayer: playerIndex,
+          capturingPiece: pieceIndex,
+          timestamp: Date.now()
+        });
+      });
       
       // Check if player won
       const playerWon = hasPlayerWon(newPlayers[playerIndex]);
       
-      // Determine if player gets another turn (rolled 6 and didn't win)
-      const getsAnotherTurn = state.diceValue === GAME_CONSTANTS.WINNING_DICE_VALUE && !playerWon;
+      // Determine if player gets another turn (rolled 6 and didn't win, or captured a piece)
+      const getsAnotherTurn = (state.diceValue === GAME_CONSTANTS.WINNING_DICE_VALUE || capturedPieces.length > 0) && !playerWon;
       
       const nextPlayer = getsAnotherTurn ? state.currentPlayer : (state.currentPlayer + 1) % state.numberOfPlayers;
       
@@ -155,6 +185,7 @@ export const gameReducer = (state, action) => {
         from: oldPosition,
         to: newPosition,
         diceValue: state.diceValue,
+        capturedPieces: capturedPieces.length,
         timestamp: Date.now()
       };
       
@@ -170,7 +201,7 @@ export const gameReducer = (state, action) => {
           player: playerIndex,
           action: 'piece_moved',
           ...moveHistoryEntry
-        }]
+        }, ...captureHistory]
       };
       
       // Handle game win

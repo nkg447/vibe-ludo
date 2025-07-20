@@ -132,6 +132,21 @@ export const hasPlayerWon = (player) => {
   return player.pieces.every(position => position === GAME_CONSTANTS.MAX_POSITION);
 };
 
+// Check if a position is a safe zone
+export const isSafeZone = (row, col) => {
+  return (
+    (row === 6 && col === 1) || // Red starting position
+    (row === 13 && col === 6) || // Blue starting position  
+    (row === 8 && col === 13) || // Yellow starting position
+    (row === 1 && col === 8) ||   // Green starting position
+    // 8th positions after each starting point
+    (row === 2 && col === 6) || // Red 8th position
+    (row === 8 && col === 2) || // Blue 8th position
+    (row === 12 && col === 8) || // Yellow 8th position
+    (row === 6 && col === 12)   // Green 8th position
+  );
+};
+
 // Get pieces that can capture at a specific position
 export const getPiecesAtPosition = (gameState, targetPosition, excludePlayer = -1) => {
   const piecesAtPosition = [];
@@ -152,6 +167,41 @@ export const getPiecesAtPosition = (gameState, targetPosition, excludePlayer = -
   });
   
   return piecesAtPosition;
+};
+
+// Check for pieces that can be captured at a target position
+export const findCapturablePieces = (gameState, targetRow, targetCol, movingPlayerIndex) => {
+  // Don't capture on safe zones
+  if (isSafeZone(targetRow, targetCol)) {
+    return [];
+  }
+  
+  const capturablePieces = [];
+  
+  gameState.players.forEach((player, playerIndex) => {
+    // Don't capture own pieces
+    if (playerIndex === movingPlayerIndex) return;
+    
+    player.pieces.forEach((position, pieceIndex) => {
+      // Only pieces on the board can be captured (not in home)
+      if (position === GAME_CONSTANTS.HOME_POSITION) return;
+      
+      const piecePos = getPiecePosition(player.color, position);
+      if (piecePos) {
+        const [pieceRow, pieceCol] = piecePos;
+        if (pieceRow === targetRow && pieceCol === targetCol) {
+          capturablePieces.push({ 
+            playerIndex, 
+            pieceIndex, 
+            color: player.color,
+            position: position
+          });
+        }
+      }
+    });
+  });
+  
+  return capturablePieces;
 };
 
 // Generate random dice value

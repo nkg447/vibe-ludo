@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGameActions, useBoardLogic } from '../../store';
 import './Board.css';
+import { isSafeZone } from '../../store/gameUtils';
 
 const Board = ({ gameState, currentPlayer, diceValue }) => {
   // Board layout - 15x15 grid
@@ -34,19 +35,6 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
       (col === 8 && (row <= 5 || row >= 9)) ||
       (row === 7 && (col === 0 || col === 14)) ||
       (col === 7 && (row === 0 || row === 14))
-    );
-    
-    // Define safe zones (colored squares) - at starting positions and 8th positions
-    const isSafeZone = (
-      (row === 6 && col === 1) || // Red starting position
-      (row === 13 && col === 6) || // Blue starting position  
-      (row === 8 && col === 13) || // Yellow starting position
-      (row === 1 && col === 8) ||   // Green starting position
-      // 8th positions after each starting point
-      (row === 2 && col === 6) || // Red 8th position
-      (row === 8 && col === 2) || // Blue 8th position
-      (row === 12 && col === 8) || // Yellow 8th position
-      (row === 6 && col === 12)   // Green 8th position
     );
     
     // Get safe zone color based on position
@@ -85,8 +73,8 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
     else if (isCenter) cellClass += ' center';
     else if (isPath) cellClass += ' path';
     else cellClass += ' border';
-    
-    if (isSafeZone) {
+
+    if (isSafeZone(row, col)) {
       cellClass += ' safe-zone';
       cellClass += ` ${getSafeZoneColor(row, col)}`;
     }
@@ -120,11 +108,14 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
               piece.isCurrentPlayer ? 'current-player-piece' : ''
             } ${
               piece.isMovable ? 'movable-piece' : ''
+            } ${
+              piece.isVulnerable ? 'vulnerable-piece' : ''
             }`}
             onClick={() => handlePieceClick(piece.playerIndex, piece.pieceIndex)}
             style={{
               transform: allPieces.length > 1 ? `translate(${index * 3}px, ${index * 3}px)` : 'none'
             }}
+            title={piece.isVulnerable ? 'This piece can be captured!' : ''}
           />
         ))}
       </div>

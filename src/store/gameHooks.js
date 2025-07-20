@@ -1,5 +1,5 @@
 import { useGame } from './GameContext';
-import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition } from './gameUtils';
+import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone } from './gameUtils';
 import { GAME_STATUS, GAME_CONSTANTS } from './gameTypes';
 
 // Custom hooks for game functionality
@@ -93,6 +93,12 @@ export const useGameActions = () => {
     calculateNewPosition: (currentPosition, diceValue = gameState.diceValue) => 
       calculateNewPosition(currentPosition, diceValue),
     
+    // Capture-related functions
+    findCapturablePieces: (targetRow, targetCol, movingPlayerIndex) =>
+      findCapturablePieces(gameState, targetRow, targetCol, movingPlayerIndex),
+    
+    isSafeZone: (row, col) => isSafeZone(row, col),
+    
     // Helper functions
     getCurrentPlayerInfo: () => {
       const player = gameState.players[gameState.currentPlayer];
@@ -132,6 +138,16 @@ export const useGameActions = () => {
       const currentPosition = player.pieces[pieceIndex];
       const newPosition = calculateNewPosition(currentPosition, gameState.diceValue);
       
+      // Check for potential captures
+      const targetBoardPosition = getPiecePosition(player.color, newPosition);
+      if (targetBoardPosition) {
+        const [targetRow, targetCol] = targetBoardPosition;
+        const capturablePieces = findCapturablePieces(gameState, targetRow, targetCol, playerIndex);
+        if (capturablePieces.length > 0) {
+          console.log(`This move will capture ${capturablePieces.length} piece(s)!`);
+        }
+      }
+      
       actions.movePiece(playerIndex, pieceIndex, newPosition);
       return true;
     }
@@ -155,12 +171,17 @@ export const useBoardLogic = () => {
         player.pieces.forEach((position, pieceIndex) => {
           const piecePos = getPiecePosition(player.color, position);
           if (piecePos && piecePos[0] === row && piecePos[1] === col) {
+            const isVulnerable = !isSafeZone(row, col) && 
+                               playerIndex !== gameState.currentPlayer && 
+                               position !== GAME_CONSTANTS.HOME_POSITION;
+            
             piecesOnCell.push({ 
               playerIndex, 
               pieceIndex, 
               color: player.color,
               isMovable: canMovePiece(playerIndex, pieceIndex),
-              isCurrentPlayer: playerIndex === gameState.currentPlayer
+              isCurrentPlayer: playerIndex === gameState.currentPlayer,
+              isVulnerable: isVulnerable
             });
           }
         });
