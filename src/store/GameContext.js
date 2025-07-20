@@ -60,9 +60,10 @@ export const GameProvider = ({ children }) => {
         logger.log('Broadcasting dice value and move requirement for valid moves case');
         broadcastAction(gameActions.setDiceValue(gameState.diceValue));
         broadcastAction(gameActions.setMoveRequired(true));
-      } else if (gameState.diceValue === 0) {
-        // Case 2: No valid moves, player was auto-switched, broadcast the switch
-        logger.log('No valid moves - broadcasting player switch to:', gameState.currentPlayer);
+      } else if (gameState.diceValue <= 0) {
+        // Case 2: No valid moves, dice value is negative, broadcast the dice value and player switch
+        logger.log('No valid moves - broadcasting negative dice value and player switch to:', gameState.currentPlayer);
+        broadcastAction(gameActions.setDiceValue(gameState.diceValue));
         broadcastAction(gameActions.switchPlayer(gameState.currentPlayer));
       }
     }

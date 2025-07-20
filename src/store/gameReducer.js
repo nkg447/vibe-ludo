@@ -119,7 +119,7 @@ export const gameReducer = (state, action) => {
         return {
           ...state,
           currentPlayer: nextPlayer,
-          diceValue: 0,
+          diceValue: -newDiceValue, // Negative value indicates dice was rolled but not used
           moveRequired: false,
           consecutiveSixes: 0,
           turnHistory: [...state.turnHistory, {

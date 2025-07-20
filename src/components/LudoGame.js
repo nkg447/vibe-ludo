@@ -5,6 +5,7 @@ import NetworkManager from './NetworkManager/NetworkManager';
 import NetworkDebugger from './NetworkDebugger/NetworkDebugger';
 import { useGameSelectors, useGameActions } from '../store';
 import './LudoGame.css';
+import { NETWORK_MODE } from '../store/gameTypes';
 
 const LudoGame = () => {
   // Use the new state management hooks
@@ -125,11 +126,11 @@ const LudoGame = () => {
           <Dice 
             value={diceValue} 
             onRoll={rollDice}
-            disabled={moveRequired || (networkMode !== 'LOCAL' && !isMyTurn)}
+            disabled={moveRequired || (networkMode !== NETWORK_MODE.LOCAL && !isMyTurn)}
           />
           <div className="player-turn">
             {getCurrentPlayerInfo().name}'s Turn
-            {networkMode !== 'LOCAL' && (
+            {networkMode !== NETWORK_MODE.LOCAL && (
               <div className={`turn-indicator ${isMyTurn ? 'my-turn' : 'waiting'}`}>
                 {isMyTurn ? '(Your Turn)' : '(Waiting...)'}
               </div>

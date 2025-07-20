@@ -85,7 +85,7 @@ export const getPiecePosition = (color, position) => {
 // Check if a piece can be moved
 export const canMovePiece = (gameState, currentPlayer, diceValue, playerIndex, pieceIndex) => {
   if (playerIndex !== currentPlayer) return false;
-  if (diceValue === 0) return false;
+  if (diceValue <= 0) return false; // Also check for negative values (dice not used)
   
   const player = gameState.players[playerIndex];
   if (!player) return false;
