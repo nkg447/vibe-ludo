@@ -74,14 +74,27 @@ export const gameReducer = (state, action) => {
         moveHistory: [],
         turnHistory: [],
         winner: null,
-        gameEndTime: null
+        gameEndTime: null,
+        // Update isMyTurn based on network mode - if not local, only player 0 starts
+        isMyTurn: state.networkMode === NETWORK_MODE.LOCAL 
+          ? true 
+          : (state.playerId === 0 || state.playerId === null)
       };
     }
 
     case GAME_ACTIONS.RESTART_GAME:
       return {
         ...initialGameState,
-        selectedPlayerCount: state.selectedPlayerCount
+        selectedPlayerCount: state.selectedPlayerCount,
+        // Preserve network state
+        networkMode: state.networkMode,
+        connectionStatus: state.connectionStatus,
+        playerId: state.playerId,
+        channelName: state.channelName,
+        // Set isMyTurn based on network mode
+        isMyTurn: state.networkMode === NETWORK_MODE.LOCAL 
+          ? true 
+          : (state.playerId === 0 || state.playerId === null)
       };
 
     case GAME_ACTIONS.ROLL_DICE: {
@@ -122,6 +135,10 @@ export const gameReducer = (state, action) => {
           diceValue: -newDiceValue, // Negative value indicates dice was rolled but not used
           moveRequired: false,
           consecutiveSixes: 0,
+          // Update isMyTurn based on network mode and current player
+          isMyTurn: state.networkMode === NETWORK_MODE.LOCAL 
+            ? true 
+            : nextPlayer === state.playerId,
           turnHistory: [...state.turnHistory, {
             player: state.currentPlayer,
             action: 'no_moves_available',
@@ -201,7 +218,11 @@ export const gameReducer = (state, action) => {
           player: playerIndex,
           action: 'piece_moved',
           ...moveHistoryEntry
-        }, ...captureHistory]
+        }, ...captureHistory],
+        // Update isMyTurn based on network mode and current player
+        isMyTurn: state.networkMode === NETWORK_MODE.LOCAL 
+          ? true 
+          : nextPlayer === state.playerId
       };
       
       // Handle game win
