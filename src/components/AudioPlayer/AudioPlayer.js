@@ -47,7 +47,7 @@ const AudioPlayer = () => {
       // Play the selected track
       setCurrentAudio(trackFile);
       if (audioRef.current) {
-        audioRef.current.src = `/assets/audio/${trackFile}`;
+        audioRef.current.src = `./assets/audio/${trackFile}`;
         audioRef.current.load();
         audioRef.current.play()
           .then(() => setIsPlaying(true))
