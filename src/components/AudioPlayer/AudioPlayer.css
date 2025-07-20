@@ -1,0 +1,257 @@
+.audio-player {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.audio-toggle-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #667eea;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-toggle-btn:hover {
+  background: white;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.audio-panel {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 300px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.audio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.audio-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.track-selection {
+  margin-bottom: 15px;
+}
+
+.track-selection h4 {
+  margin: 0 0 10px 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.track-btn {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.track-btn:hover {
+  background: #e9ecef;
+  border-color: #667eea;
+}
+
+.track-btn.selected {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+.audio-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.control-btn {
+  background: #667eea;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  min-width: 50px;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.control-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.volume-control label {
+  font-weight: 500;
+}
+
+.volume-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #e9ecef;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.current-track {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #e9ecef;
+}
+
+.current-track p {
+  margin: 0 0 5px 0;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.playing-indicator {
+  color: #667eea;
+  font-weight: bold;
+  font-size: 0.9rem;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .audio-player {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .audio-toggle-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+  
+  .audio-panel {
+    min-width: 280px;
+    right: -10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .audio-panel {
+    min-width: 260px;
+    right: -20px;
+  }
+  
+  .track-btn {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+}

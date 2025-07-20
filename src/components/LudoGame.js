@@ -3,6 +3,7 @@ import Board from './Board/Board';
 import Dice from './Dice/Dice';
 import NetworkManager from './NetworkManager/NetworkManager';
 import NetworkDebugger from './NetworkDebugger/NetworkDebugger';
+import AudioPlayer from './AudioPlayer/AudioPlayer';
 import { useGameSelectors, useGameActions } from '../store';
 import './LudoGame.css';
 import { NETWORK_MODE } from '../store/gameTypes';
@@ -52,6 +53,7 @@ const LudoGame = () => {
   if (!isGameStarted) {
     return (
       <div className="ludo-game">
+        <AudioPlayer />
         <div className="game-header">
           <h1>Ludo Game</h1>
           <p>Choose number of players to start the game</p>
@@ -98,6 +100,7 @@ const LudoGame = () => {
 
   return (
     <div className="ludo-game">
+      <AudioPlayer />
       <div className="game-header">
         <h1>Ludo Game</h1>
         <div className="game-info">
