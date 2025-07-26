@@ -77,7 +77,7 @@ export const playSwitchPlayerSound = () => {
 };
 
 export const playMoveSound = () => {
-  soundEffects.playSound('move', './assets/audio/effects/move1.mp3');
+  soundEffects.playSound('move', './assets/audio/effects/move3.mp3');
 };
 
 export const playCaptureSound = () => {
