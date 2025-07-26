@@ -1,6 +1,7 @@
 import { useGame } from './GameContext';
 import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone, isRedPieceArea, isYellowPieceArea, isGreenPieceArea, isBluePieceArea } from './gameUtils';
 import { GAME_STATUS, GAME_CONSTANTS } from './gameTypes';
+import { playMoveSound } from '../utils/soundEffects';
 
 // Custom hooks for game functionality
 
@@ -65,6 +66,31 @@ export const useGameSelectors = () => {
 export const useGameActions = () => {
   const { gameState, actions } = useGame();
 
+  // Define animatePieceMove function
+  const animatePieceMove = (playerIndex, pieceIndex, fromPosition, toPosition, diceValue) => {
+    actions.startPieceAnimation(playerIndex, pieceIndex, fromPosition, toPosition, diceValue);
+    
+    // Animate step by step
+    let currentStep = 1;
+    const animateStep = () => {
+      if (currentStep <= diceValue) {
+        // Play move sound for each step
+        playMoveSound();
+        
+        actions.stepPieceAnimation(playerIndex, pieceIndex, currentStep, diceValue);
+        currentStep++;
+        setTimeout(animateStep, 300); // 300ms per step
+      } else {
+        // Animation complete, finalize the move
+        actions.endPieceAnimation(playerIndex, pieceIndex, toPosition);
+        // Now handle the actual game logic (captures, turn switching, etc.)
+        actions.movePiece(playerIndex, pieceIndex, toPosition);
+      }
+    };
+    
+    setTimeout(animateStep, 300); // Start first step after 300ms
+  };
+
   return {
     // Game lifecycle actions
     startGame: actions.startGame,
@@ -75,6 +101,11 @@ export const useGameActions = () => {
     rollDice: actions.rollDice,
     movePiece: actions.movePiece,
     switchPlayer: actions.switchPlayer,
+    
+    // Animation actions
+    startPieceAnimation: actions.startPieceAnimation,
+    stepPieceAnimation: actions.stepPieceAnimation,
+    endPieceAnimation: actions.endPieceAnimation,
     
     // Network actions
     setNetworkMode: actions.setNetworkMode,
@@ -134,6 +165,11 @@ export const useGameActions = () => {
         return false;
       }
       
+      // Don't allow new moves while animating
+      if (gameState.isAnimating) {
+        return false;
+      }
+      
       const player = gameState.players[playerIndex];
       const currentPosition = player.pieces[pieceIndex];
       const newPosition = calculateNewPosition(currentPosition, gameState.diceValue);
@@ -148,9 +184,13 @@ export const useGameActions = () => {
         }
       }
       
-      actions.movePiece(playerIndex, pieceIndex, newPosition);
+      // Start animated movement
+      animatePieceMove(playerIndex, pieceIndex, currentPosition, newPosition, gameState.diceValue);
       return true;
-    }
+    },
+
+    // Animated piece movement function
+    animatePieceMove: animatePieceMove
   };
 };
 
@@ -169,19 +209,33 @@ export const useBoardLogic = () => {
       
       gameState.players.forEach((player, playerIndex) => {
         player.pieces.forEach((position, pieceIndex) => {
-          const piecePos = getPiecePosition(player.color, position);
+          let currentPosition = position;
+          
+          // Check if this piece is currently being animated
+          if (gameState.animatingPiece && 
+              gameState.animatingPiece.playerIndex === playerIndex && 
+              gameState.animatingPiece.pieceIndex === pieceIndex) {
+            currentPosition = gameState.animatingPiece.currentPosition;
+          }
+          
+          const piecePos = getPiecePosition(player.color, currentPosition);
           if (piecePos && piecePos[0] === row && piecePos[1] === col) {
             const isVulnerable = !isSafeZone(row, col) && 
                                playerIndex !== gameState.currentPlayer && 
-                               position !== GAME_CONSTANTS.HOME_POSITION;
+                               currentPosition !== GAME_CONSTANTS.HOME_POSITION;
+            
+            const isAnimating = gameState.animatingPiece && 
+                              gameState.animatingPiece.playerIndex === playerIndex && 
+                              gameState.animatingPiece.pieceIndex === pieceIndex;
             
             piecesOnCell.push({ 
               playerIndex, 
               pieceIndex, 
               color: player.color,
-              isMovable: canMovePiece(playerIndex, pieceIndex),
+              isMovable: canMovePiece(playerIndex, pieceIndex) && !gameState.isAnimating,
               isCurrentPlayer: playerIndex === gameState.currentPlayer,
-              isVulnerable: isVulnerable
+              isVulnerable: isVulnerable,
+              isAnimating: isAnimating
             });
           }
         });

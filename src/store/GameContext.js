@@ -187,6 +187,25 @@ export const GameProvider = ({ children }) => {
       return true;
     },
 
+    // Animation actions
+    startPieceAnimation: (playerIndex, pieceIndex, fromPosition, toPosition, diceValue) => {
+      logger.log('Starting piece animation:', { playerIndex, pieceIndex, fromPosition, toPosition, diceValue });
+      const action = gameActions.startPieceAnimation(playerIndex, pieceIndex, fromPosition, toPosition, diceValue);
+      dispatch(action);
+      // Note: Animation actions are not broadcasted since they are visual only
+    },
+
+    stepPieceAnimation: (playerIndex, pieceIndex, currentStep, totalSteps) => {
+      const action = gameActions.stepPieceAnimation(playerIndex, pieceIndex, currentStep, totalSteps);
+      dispatch(action);
+    },
+
+    endPieceAnimation: (playerIndex, pieceIndex, finalPosition) => {
+      logger.log('Ending piece animation:', { playerIndex, pieceIndex, finalPosition });
+      const action = gameActions.endPieceAnimation(playerIndex, pieceIndex, finalPosition);
+      dispatch(action);
+    },
+
     switchPlayer: (playerIndex) => {
       logger.log('Switching to player', playerIndex);
       const action = gameActions.switchPlayer(playerIndex);

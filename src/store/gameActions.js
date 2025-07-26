@@ -32,6 +32,26 @@ export const gameActions = {
     payload: { playerIndex, pieceIndex, newPosition }
   }),
 
+  animatePieceMove: (playerIndex, pieceIndex, fromPosition, toPosition, diceValue) => ({
+    type: GAME_ACTIONS.ANIMATE_PIECE_MOVE,
+    payload: { playerIndex, pieceIndex, fromPosition, toPosition, diceValue }
+  }),
+
+  startPieceAnimation: (playerIndex, pieceIndex, fromPosition, toPosition, diceValue) => ({
+    type: GAME_ACTIONS.START_PIECE_ANIMATION,
+    payload: { playerIndex, pieceIndex, fromPosition, toPosition, diceValue }
+  }),
+
+  stepPieceAnimation: (playerIndex, pieceIndex, currentStep, totalSteps) => ({
+    type: GAME_ACTIONS.STEP_PIECE_ANIMATION,
+    payload: { playerIndex, pieceIndex, currentStep, totalSteps }
+  }),
+
+  endPieceAnimation: (playerIndex, pieceIndex, finalPosition) => ({
+    type: GAME_ACTIONS.END_PIECE_ANIMATION,
+    payload: { playerIndex, pieceIndex, finalPosition }
+  }),
+
   switchPlayer: (playerIndex) => ({
     type: GAME_ACTIONS.SWITCH_PLAYER,
     payload: { playerIndex }

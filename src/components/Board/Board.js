@@ -104,6 +104,8 @@ const Board = ({ gameState, currentPlayer, diceValue }) => {
               piece.isMovable ? 'movable-piece' : ''
             } ${
               piece.isVulnerable ? 'vulnerable-piece' : ''
+            } ${
+              piece.isAnimating ? 'moving-step' : ''
             }`}
             onClick={() => handlePieceClick(piece.playerIndex, piece.pieceIndex)}
             style={{

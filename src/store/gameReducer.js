@@ -25,6 +25,10 @@ export const initialGameState = {
   moveRequired: false,
   consecutiveSixes: 0,
   
+  // Animation state
+  animatingPiece: null, // { playerIndex, pieceIndex, fromPosition, toPosition, currentStep, totalSteps }
+  isAnimating: false,
+  
   // Game history
   moveHistory: [],
   turnHistory: [],
@@ -157,6 +161,60 @@ export const gameReducer = (state, action) => {
           }]
         };
       }
+    }
+
+    case GAME_ACTIONS.START_PIECE_ANIMATION: {
+      const { playerIndex, pieceIndex, fromPosition, toPosition, diceValue } = action.payload;
+      
+      return {
+        ...state,
+        animatingPiece: {
+          playerIndex,
+          pieceIndex,
+          fromPosition,
+          toPosition,
+          currentStep: 0,
+          totalSteps: diceValue,
+          currentPosition: fromPosition
+        },
+        isAnimating: true
+      };
+    }
+
+    case GAME_ACTIONS.STEP_PIECE_ANIMATION: {
+      const { playerIndex, pieceIndex, currentStep } = action.payload;
+      
+      if (!state.animatingPiece || 
+          state.animatingPiece.playerIndex !== playerIndex || 
+          state.animatingPiece.pieceIndex !== pieceIndex) {
+        return state;
+      }
+
+      const newCurrentPosition = state.animatingPiece.fromPosition + currentStep;
+      
+      return {
+        ...state,
+        animatingPiece: {
+          ...state.animatingPiece,
+          currentStep,
+          currentPosition: newCurrentPosition
+        }
+      };
+    }
+
+    case GAME_ACTIONS.END_PIECE_ANIMATION: {
+      const { playerIndex, pieceIndex, finalPosition } = action.payload;
+      
+      // Update the actual piece position and clear animation state
+      const newPlayers = [...state.players];
+      newPlayers[playerIndex].pieces[pieceIndex] = finalPosition;
+      
+      return {
+        ...state,
+        players: newPlayers,
+        animatingPiece: null,
+        isAnimating: false
+      };
     }
 
     case GAME_ACTIONS.MOVE_PIECE: {
