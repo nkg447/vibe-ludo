@@ -184,8 +184,18 @@ export const useGameActions = () => {
         }
       }
       
-      // Start animated movement
-      animatePieceMove(playerIndex, pieceIndex, currentPosition, newPosition, gameState.diceValue);
+      // Check if this is a move from home position to start position (should not animate)
+      const isMovingFromHomeToStart = currentPosition === GAME_CONSTANTS.HOME_POSITION && 
+                                      newPosition === 1 && 
+                                      gameState.diceValue === GAME_CONSTANTS.WINNING_DICE_VALUE;
+      
+      if (isMovingFromHomeToStart) {
+        // Move instantly without animation
+        actions.movePiece(playerIndex, pieceIndex, newPosition);
+      } else {
+        // Start animated movement for all other moves
+        animatePieceMove(playerIndex, pieceIndex, currentPosition, newPosition, gameState.diceValue);
+      }
       return true;
     },
 
