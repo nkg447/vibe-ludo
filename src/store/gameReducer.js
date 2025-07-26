@@ -1,5 +1,6 @@
 import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS, NETWORK_MODE, CONNECTION_STATUS } from './gameTypes';
 import { hasValidMoves, hasPlayerWon, rollDiceValue, findCapturablePieces, getPiecePosition } from './gameUtils';
+import { playSwitchPlayerSound } from '../utils/soundEffects';
 import logger from '../logger';
 
 // Initial game state
@@ -134,6 +135,10 @@ export const gameReducer = (state, action) => {
         logger.log('No valid moves available, switching to next player');
         const nextPlayer = (state.currentPlayer + 1) % state.numberOfPlayers;
         logger.log('Switching from player', state.currentPlayer, 'to player', nextPlayer);
+        
+        // Play switch player sound effect
+        playSwitchPlayerSound();
+        
         return {
           ...state,
           currentPlayer: nextPlayer,
@@ -201,6 +206,11 @@ export const gameReducer = (state, action) => {
       
       const nextPlayer = getsAnotherTurn ? state.currentPlayer : (state.currentPlayer + 1) % state.numberOfPlayers;
       
+      // Play switch player sound effect only when switching to a different player
+      if (!getsAnotherTurn && !playerWon) {
+        playSwitchPlayerSound();
+      }
+      
       const moveHistoryEntry = {
         player: playerIndex,
         pieceIndex,
@@ -251,6 +261,9 @@ export const gameReducer = (state, action) => {
       };
 
     case GAME_ACTIONS.SWITCH_PLAYER:
+      // Play switch player sound effect
+      playSwitchPlayerSound();
+      
       return {
         ...state,
         currentPlayer: action.payload.playerIndex,
