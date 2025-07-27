@@ -17,6 +17,11 @@ export const gameActions = {
     payload: { count }
   }),
 
+  setPlayerColors: (colors) => ({
+    type: GAME_ACTIONS.SET_PLAYER_COLORS,
+    payload: { colors }
+  }),
+
   // Turn management actions
   rollDice: () => ({
     type: GAME_ACTIONS.ROLL_DICE

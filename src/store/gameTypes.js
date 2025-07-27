@@ -4,6 +4,7 @@ export const GAME_ACTIONS = {
   START_GAME: 'START_GAME',
   RESTART_GAME: 'RESTART_GAME',
   SET_PLAYER_COUNT: 'SET_PLAYER_COUNT',
+  SET_PLAYER_COLORS: 'SET_PLAYER_COLORS',
   
   // Turn management
   ROLL_DICE: 'ROLL_DICE',
@@ -42,6 +43,21 @@ export const GAME_CONSTANTS = {
   WINNING_DICE_VALUE: 6,
   TOTAL_PATH_LENGTH: 56,
   ANIMATION_STEP_DURATION: 300, // Duration for each step in milliseconds
+};
+
+// Available colors for player selection
+export const AVAILABLE_COLORS = [
+  { id: 'red', name: 'Red', bgColor: '#e74c3c' },
+  { id: 'blue', name: 'Blue', bgColor: '#3498db' },
+  { id: 'yellow', name: 'Yellow', bgColor: '#f1c40f' },
+  { id: 'green', name: 'Green', bgColor: '#27ae60' }
+];
+
+// Default player color selections for different player counts
+export const DEFAULT_COLOR_SELECTIONS = {
+  2: ['red', 'yellow'],
+  3: ['red', 'blue', 'yellow'],
+  4: ['red', 'blue', 'yellow', 'green']
 };
 
 // Player configurations

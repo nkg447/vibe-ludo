@@ -3,7 +3,7 @@ export { GameProvider, useGame } from './GameContext';
 export { useGameSelectors, useGameActions, useBoardLogic } from './gameHooks';
 export { gameActions } from './gameActions';
 export { gameReducer, initialGameState } from './gameReducer';
-export { GAME_ACTIONS, GAME_CONSTANTS, PLAYER_CONFIGS, GAME_STATUS } from './gameTypes';
+export { GAME_ACTIONS, GAME_CONSTANTS, PLAYER_CONFIGS, GAME_STATUS, AVAILABLE_COLORS, DEFAULT_COLOR_SELECTIONS } from './gameTypes';
 export {
   getPathPositions,
   getPiecePosition,

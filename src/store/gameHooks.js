@@ -20,6 +20,7 @@ export const useGameSelectors = () => {
     currentPlayer: gameState.currentPlayer,
     numberOfPlayers: gameState.numberOfPlayers,
     selectedPlayerCount: gameState.selectedPlayerCount,
+    selectedColors: gameState.selectedColors,
     players: gameState.players,
     winner: gameState.winner,
     
@@ -96,6 +97,7 @@ export const useGameActions = () => {
     startGame: actions.startGame,
     restartGame: actions.restartGame,
     setPlayerCount: actions.setPlayerCount,
+    setPlayerColors: actions.setPlayerColors,
     
     // Turn actions
     rollDice: actions.rollDice,
@@ -138,25 +140,11 @@ export const useGameActions = () => {
     },
     
     getPlayersForPreview: (numPlayers = gameState.selectedPlayerCount) => {
-      if (numPlayers === 2) {
-        return [
-          { name: 'Red', color: 'red' },
-          { name: 'Yellow', color: 'yellow' }
-        ];
-      } else if (numPlayers === 3) {
-        return [
-          { name: 'Red', color: 'red' },
-          { name: 'Blue', color: 'blue' },
-          { name: 'Yellow', color: 'yellow' }
-        ];
-      } else {
-        return [
-          { name: 'Red', color: 'red' },
-          { name: 'Blue', color: 'blue' },
-          { name: 'Yellow', color: 'yellow' },
-          { name: 'Green', color: 'green' }
-        ];
-      }
+      const colors = gameState.selectedColors || [];
+      return colors.slice(0, numPlayers).map(color => ({
+        name: color.charAt(0).toUpperCase() + color.slice(1),
+        color: color
+      }));
     },
     
     // Advanced game logic

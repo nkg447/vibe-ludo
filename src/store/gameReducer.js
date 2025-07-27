@@ -1,4 +1,4 @@
-import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS, NETWORK_MODE, CONNECTION_STATUS } from './gameTypes';
+import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS, NETWORK_MODE, CONNECTION_STATUS, DEFAULT_COLOR_SELECTIONS } from './gameTypes';
 import { hasValidMoves, hasPlayerWon, rollDiceValue, findCapturablePieces, getPiecePosition } from './gameUtils';
 import { playSwitchPlayerSound } from '../utils/soundEffects';
 import logger from '../logger';
@@ -10,6 +10,7 @@ export const initialGameState = {
   gameStatus: GAME_STATUS.SETUP,
   numberOfPlayers: 4,
   selectedPlayerCount: 4,
+  selectedColors: DEFAULT_COLOR_SELECTIONS[4], // Default to 4-player colors
   
   // Game state
   players: [
@@ -58,15 +59,23 @@ export const gameReducer = (state, action) => {
     case GAME_ACTIONS.SET_PLAYER_COUNT:
       return {
         ...state,
-        selectedPlayerCount: action.payload.count
+        selectedPlayerCount: action.payload.count,
+        selectedColors: DEFAULT_COLOR_SELECTIONS[action.payload.count] || DEFAULT_COLOR_SELECTIONS[4]
+      };
+
+    case GAME_ACTIONS.SET_PLAYER_COLORS:
+      return {
+        ...state,
+        selectedColors: action.payload.colors
       };
 
     case GAME_ACTIONS.START_GAME: {
       const { numberOfPlayers } = action.payload;
-      const playerConfigs = PLAYER_CONFIGS[numberOfPlayers] || PLAYER_CONFIGS[4];
       
-      const players = playerConfigs.map(config => ({
-        ...config,
+      const players = state.selectedColors.map((color, index) => ({
+        id: index,
+        color: color,
+        name: color.charAt(0).toUpperCase() + color.slice(1),
         pieces: [0, 0, 0, 0],
         score: 0
       }));
@@ -96,6 +105,7 @@ export const gameReducer = (state, action) => {
       return {
         ...initialGameState,
         selectedPlayerCount: state.selectedPlayerCount,
+        selectedColors: state.selectedColors,
         // Preserve network state
         networkMode: state.networkMode,
         connectionStatus: state.connectionStatus,
