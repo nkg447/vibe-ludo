@@ -3,13 +3,25 @@ import { useGameActions, useBoardLogic } from '../../store';
 import './Board.css';
 import { isRedPieceArea, isBluePieceArea, isGreenPieceArea, isYellowPieceArea, isSafeZone } from '../../store/gameUtils';
 
+let isAutoMoving = false;
+
 const Board = ({ gameState, currentPlayer, diceValue }) => {
   // Board layout - 15x15 grid
   const BOARD_SIZE = 15;
   
   // Use game actions and board logic hooks
   const { handlePieceClick } = useGameActions();
-  const { getPiecesOnCell, getHomePieces } = useBoardLogic();
+  const { getPiecesOnCell, getHomePieces, getMovablePieces } = useBoardLogic();
+
+  const movablePieces = getMovablePieces();
+  if (movablePieces.length === 1 && !isAutoMoving) {
+    isAutoMoving = true;
+    // Auto-move the piece
+    setTimeout(() => {
+      handlePieceClick(movablePieces[0].playerIndex, movablePieces[0].pieceIndex);
+      isAutoMoving = false;
+    }, 0); // Delay to allow UI to update
+  }
 
   const renderCell = (row, col) => {
     const cellKey = `${row}-${col}`;

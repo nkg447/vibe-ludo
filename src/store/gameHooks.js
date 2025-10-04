@@ -1,5 +1,5 @@
 import { useGame } from './GameContext';
-import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone, isRedPieceArea, isYellowPieceArea, isGreenPieceArea, isBluePieceArea } from './gameUtils';
+import { canMovePiece, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone, isRedPieceArea, isYellowPieceArea, isGreenPieceArea, isBluePieceArea } from './gameUtils';
 import { GAME_STATUS, GAME_CONSTANTS } from './gameTypes';
 import { playMoveSound } from '../utils/soundEffects';
 
@@ -118,9 +118,6 @@ export const useGameActions = () => {
     canMovePiece: (playerIndex, pieceIndex) => 
       canMovePiece(gameState, gameState.currentPlayer, gameState.diceValue, playerIndex, pieceIndex),
     
-    hasValidMoves: (playerIndex, diceValue = gameState.diceValue) => 
-      hasValidMoves(gameState, playerIndex, diceValue),
-    
     calculateNewPosition: (currentPosition, diceValue = gameState.diceValue) => 
       calculateNewPosition(currentPosition, diceValue),
     
@@ -210,6 +207,8 @@ export const useBoardLogic = () => {
   const { canMovePiece } = useGameActions();
 
   return {
+    getMovablePieces: () => gameState.movablePieces || [],
+
     // Board rendering helpers
     getPiecePosition: (color, position) => getPiecePosition(color, position),
     
