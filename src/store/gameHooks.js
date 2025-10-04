@@ -207,6 +207,8 @@ export const useBoardLogic = () => {
   const { canMovePiece } = useGameActions();
 
   return {
+    getMovablePieces: () => gameState.movablePieces || [],
+
     // Board rendering helpers
     getPiecePosition: (color, position) => getPiecePosition(color, position),
     

@@ -129,8 +129,7 @@ export const getMovablePieces = (gameState, playerIndex, diceValue) => {
     if (canMovePiece(gameState, playerIndex, diceValue, playerIndex, pieceIndex)) {
       movablePieces.push({
         pieceIndex,
-        currentPosition: position,
-        newPosition: calculateNewPosition(position, diceValue)
+        playerIndex
       });
     }
   });

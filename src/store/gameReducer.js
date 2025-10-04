@@ -127,14 +127,12 @@ export const gameReducer = (state, action) => {
       }
       
       if (movablePieces.length > 0) {
-        if (movablePieces.length == 1) {
-          logger.log('Only one piece can be moved, auto-moving piece:', movablePieces[0]);
-        }
         logger.log('Player has moves, setting moveRequired to true');
         return {
           ...state,
           diceValue: newDiceValue,
           moveRequired: true,
+          movablePieces: movablePieces,
           consecutiveSixes: newConsecutiveSixes
         };
       } else {
