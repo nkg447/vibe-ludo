@@ -8,9 +8,9 @@ export {
   getPathPositions,
   getPiecePosition,
   canMovePiece,
-  hasValidMoves,
   calculateNewPosition,
   hasPlayerWon,
+  getMovablePieces,
   getPiecesAtPosition,
   rollDiceValue
 } from './gameUtils';

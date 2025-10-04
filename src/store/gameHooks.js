@@ -1,5 +1,5 @@
 import { useGame } from './GameContext';
-import { canMovePiece, hasValidMoves, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone, isRedPieceArea, isYellowPieceArea, isGreenPieceArea, isBluePieceArea } from './gameUtils';
+import { canMovePiece, calculateNewPosition, getPiecePosition, findCapturablePieces, isSafeZone, isRedPieceArea, isYellowPieceArea, isGreenPieceArea, isBluePieceArea } from './gameUtils';
 import { GAME_STATUS, GAME_CONSTANTS } from './gameTypes';
 import { playMoveSound } from '../utils/soundEffects';
 
@@ -117,9 +117,6 @@ export const useGameActions = () => {
     // Validation functions
     canMovePiece: (playerIndex, pieceIndex) => 
       canMovePiece(gameState, gameState.currentPlayer, gameState.diceValue, playerIndex, pieceIndex),
-    
-    hasValidMoves: (playerIndex, diceValue = gameState.diceValue) => 
-      hasValidMoves(gameState, playerIndex, diceValue),
     
     calculateNewPosition: (currentPosition, diceValue = gameState.diceValue) => 
       calculateNewPosition(currentPosition, diceValue),

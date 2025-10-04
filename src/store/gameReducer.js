@@ -1,5 +1,5 @@
 import { GAME_ACTIONS, GAME_STATUS, PLAYER_CONFIGS, GAME_CONSTANTS, NETWORK_MODE, CONNECTION_STATUS } from './gameTypes';
-import { hasValidMoves, hasPlayerWon, rollDiceValue, findCapturablePieces, getPiecePosition } from './gameUtils';
+import { getMovablePieces, hasPlayerWon, rollDiceValue, findCapturablePieces, getPiecePosition } from './gameUtils';
 import { playSwitchPlayerSound } from '../utils/soundEffects';
 import logger from '../logger';
 
@@ -116,9 +116,9 @@ export const gameReducer = (state, action) => {
       const newDiceValue = rollDiceValue();
       logger.log('Dice rolled:', newDiceValue, 'Current player:', state.currentPlayer, 'Number of players:', state.numberOfPlayers);
       
-      const playerHasValidMoves = hasValidMoves(state, state.currentPlayer, newDiceValue);
-      logger.log('Player has valid moves:', playerHasValidMoves);
-      
+      const movablePieces = getMovablePieces(state, state.currentPlayer, newDiceValue);
+      logger.log('Player Movable Pieces:', movablePieces);
+
       let newConsecutiveSixes = state.consecutiveSixes;
       if (newDiceValue === GAME_CONSTANTS.WINNING_DICE_VALUE) {
         newConsecutiveSixes += 1;
@@ -126,7 +126,7 @@ export const gameReducer = (state, action) => {
         newConsecutiveSixes = 0;
       }
       
-      if (playerHasValidMoves) {
+      if (movablePieces.length > 0) {
         logger.log('Player has moves, setting moveRequired to true');
         return {
           ...state,

@@ -106,16 +106,6 @@ export const canMovePiece = (gameState, currentPlayer, diceValue, playerIndex, p
   return false;
 };
 
-// Check if player has any valid moves
-export const hasValidMoves = (gameState, playerIndex, diceValue) => {
-  const player = gameState.players[playerIndex];
-  if (!player) return false;
-  
-  return player.pieces.some((position, pieceIndex) => 
-    canMovePiece(gameState, playerIndex, diceValue, playerIndex, pieceIndex)
-  );
-};
-
 // Calculate new position for a piece
 export const calculateNewPosition = (currentPosition, diceValue) => {
   if (currentPosition === GAME_CONSTANTS.HOME_POSITION && diceValue === GAME_CONSTANTS.WINNING_DICE_VALUE) {
@@ -127,6 +117,25 @@ export const calculateNewPosition = (currentPosition, diceValue) => {
   }
   
   return currentPosition;
+};
+
+// Get list of pieces that can be moved for a given dice value
+export const getMovablePieces = (gameState, playerIndex, diceValue) => {
+  const player = gameState.players[playerIndex];
+  if (!player) return [];
+  
+  const movablePieces = [];
+  player.pieces.forEach((position, pieceIndex) => {
+    if (canMovePiece(gameState, playerIndex, diceValue, playerIndex, pieceIndex)) {
+      movablePieces.push({
+        pieceIndex,
+        currentPosition: position,
+        newPosition: calculateNewPosition(position, diceValue)
+      });
+    }
+  });
+  
+  return movablePieces;
 };
 
 // Check if a player has won (all pieces at home)
