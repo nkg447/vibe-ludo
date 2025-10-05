@@ -62,8 +62,8 @@ export const gameReducer = (state, action) => {
       };
 
     case GAME_ACTIONS.START_GAME: {
-      const { numberOfPlayers } = action.payload;
-      const playerConfigs = PLAYER_CONFIGS[numberOfPlayers] || PLAYER_CONFIGS[4];
+      const { numberOfPlayers, playerConfig } = action.payload;
+      const playerConfigs = playerConfig || PLAYER_CONFIGS[numberOfPlayers] || PLAYER_CONFIGS[4];
       
       const players = playerConfigs.map(config => ({
         ...config,

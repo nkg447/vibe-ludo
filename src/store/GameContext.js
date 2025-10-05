@@ -125,9 +125,9 @@ export const GameProvider = ({ children }) => {
     },
 
     // Game lifecycle
-    startGame: (numberOfPlayers) => {
-      logger.log('Starting game with', numberOfPlayers, 'players');
-      const action = gameActions.startGame(numberOfPlayers);
+    startGame: (numberOfPlayers, playerConfig) => {
+      logger.log('Starting game with', numberOfPlayers, 'players', 'Player Config:', playerConfig);
+      const action = gameActions.startGame(numberOfPlayers, playerConfig);
       dispatch(action);
       broadcastAction(action);
     },

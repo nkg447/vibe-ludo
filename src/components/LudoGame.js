@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Board from './Board/Board';
 import Dice from './Dice/Dice';
 import NetworkManager from './NetworkManager/NetworkManager';
@@ -6,7 +6,14 @@ import NetworkDebugger from './NetworkDebugger/NetworkDebugger';
 import AudioPlayer from './AudioPlayer/AudioPlayer';
 import { useGameSelectors, useGameActions } from '../store';
 import './LudoGame.css';
-import { NETWORK_MODE } from '../store/gameTypes';
+import { NETWORK_MODE, PLAYER_CONFIGS } from '../store/gameTypes';
+
+const ALL_COLORS = [
+  { id: 0, color: 'red', name: 'Red' },
+  { id: 1, color: 'blue', name: 'Blue' },
+  { id: 2, color: 'yellow', name: 'Yellow' },
+  { id: 3, color: 'green', name: 'Green' }
+];
 
 const LudoGame = () => {
   // Use the new state management hooks
@@ -30,6 +37,63 @@ const LudoGame = () => {
     rollDice,
     getPlayersForPreview
   } = useGameActions();
+
+  // State for color selection
+  const [selectedColors, setSelectedColors] = useState([]);
+  
+  // Initialize selected colors when player count changes
+  useEffect(() => {
+    if (selectedPlayerCount < 4) {
+      // Default to first N colors if less than 4 players
+      const defaultColors = PLAYER_CONFIGS[selectedPlayerCount] || [];
+      setSelectedColors(defaultColors.map(p => p.color));
+    } else {
+      setSelectedColors(['red', 'blue', 'yellow', 'green']);
+    }
+  }, [selectedPlayerCount]);
+
+  // Handle color selection toggle
+  const toggleColorSelection = (color) => {
+    if (selectedPlayerCount >= 4) return; // No selection needed for 4 players
+    
+    const isSelected = selectedColors.includes(color);
+    
+    if (isSelected) {
+      // Allow deselecting to swap colors - remove from current position
+      const newColors = selectedColors.filter(c => c !== color);
+      setSelectedColors(newColors);
+    } else {
+      // Add color based on current selection count
+      if (selectedColors.length < selectedPlayerCount) {
+        // Add to the list if we haven't reached the limit
+        setSelectedColors([...selectedColors, color]);
+      } else {
+        // We're at the limit, replace the last selected color
+        setSelectedColors([...selectedColors.slice(0, -1), color]);
+      }
+    }
+  };
+
+  // Get player config based on selected colors
+  const getCustomPlayerConfig = () => {
+    if (selectedPlayerCount >= 4) {
+      return PLAYER_CONFIGS[4];
+    }
+    
+    return selectedColors.map((color, index) => {
+      const colorConfig = ALL_COLORS.find(c => c.color === color);
+      return {
+        id: index,
+        color: colorConfig.color,
+        name: colorConfig.name
+      };
+    });
+  };
+
+  // Check if we can start the game
+  const canStartGame = () => {
+    return selectedColors.length === selectedPlayerCount;
+  };
 
   // Create a local version of getCurrentPlayerInfo for backwards compatibility
   const getCurrentPlayerInfo = () => {
@@ -78,10 +142,37 @@ const LudoGame = () => {
           
           <div className="player-preview">
             <h3>Players in {selectedPlayerCount}-player game:</h3>
+            
+            {selectedPlayerCount < 4 && (
+              <div className="color-selection">
+                <p className="color-selection-hint">
+                  Select {selectedPlayerCount} colors for the game:
+                </p>
+                <div className="color-options">
+                  {ALL_COLORS.map((colorConfig) => {
+                    const isSelected = selectedColors.includes(colorConfig.color);
+                    const selectionOrder = selectedColors.indexOf(colorConfig.color) + 1;
+                    
+                    return (
+                      <button
+                        key={colorConfig.color}
+                        className={`color-option player-${colorConfig.color} ${isSelected ? 'selected' : ''}`}
+                        onClick={() => toggleColorSelection(colorConfig.color)}
+                        title={`${colorConfig.name}${isSelected ? ` (Player ${selectionOrder})` : ''}`}
+                      >
+                        <span className="color-name">{colorConfig.name}</span>
+                        {isSelected && <span className="selection-badge">{selectionOrder}</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
             <div className="preview-players">
-              {getPlayersForPreview(selectedPlayerCount).map((player, index) => (
+              {getCustomPlayerConfig().map((player, index) => (
                 <div key={index} className={`preview-player player-${player.color}`}>
-                  {player.name}
+                  Player {index + 1}: {player.name}
                 </div>
               ))}
             </div>
@@ -89,9 +180,13 @@ const LudoGame = () => {
           
           <button 
             className="start-game-btn"
-            onClick={() => startGame(selectedPlayerCount)}
+            onClick={() => startGame(selectedPlayerCount, getCustomPlayerConfig())}
+            disabled={!canStartGame()}
           >
-            Start Game with {selectedPlayerCount} Players
+            {canStartGame() 
+              ? `Start Game with ${selectedPlayerCount} Players`
+              : `Select ${selectedPlayerCount - selectedColors.length} more color${selectedPlayerCount - selectedColors.length > 1 ? 's' : ''}`
+            }
           </button>
         </div>
       </div>

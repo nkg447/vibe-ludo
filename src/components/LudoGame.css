@@ -124,13 +124,19 @@
   margin-top: 20px;
 }
 
-.start-game-btn:hover {
+.start-game-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
 }
 
-.start-game-btn:active {
+.start-game-btn:active:not(:disabled) {
   transform: translateY(0);
+}
+
+.start-game-btn:disabled {
+  background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .player-preview {
@@ -140,6 +146,91 @@
 .player-preview h3 {
   color: #2c3e50;
   margin-bottom: 15px;
+}
+
+.color-selection {
+  margin-bottom: 20px;
+}
+
+.color-selection-hint {
+  color: #34495e;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.color-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.color-option {
+  position: relative;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.color-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.color-option.selected {
+  border-color: #2c3e50;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #2c3e50;
+  transform: scale(1.05);
+}
+
+.color-option.selected:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+.color-option.player-red {
+  background-color: #e74c3c;
+}
+
+.color-option.player-blue {
+  background-color: #3498db;
+}
+
+.color-option.player-yellow {
+  background-color: #f1c40f;
+}
+
+.color-option.player-green {
+  background-color: #27ae60;
+}
+
+.color-name {
+  font-size: 0.95rem;
+}
+
+.selection-badge {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border: 2px solid white;
 }
 
 .preview-players {

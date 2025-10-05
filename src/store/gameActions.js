@@ -3,9 +3,9 @@ import { GAME_ACTIONS } from './gameTypes';
 // Action creators for game state management
 export const gameActions = {
   // Game lifecycle actions
-  startGame: (numberOfPlayers) => ({
+  startGame: (numberOfPlayers, playerConfig) => ({
     type: GAME_ACTIONS.START_GAME,
-    payload: { numberOfPlayers }
+    payload: { numberOfPlayers, playerConfig }
   }),
 
   restartGame: () => ({
