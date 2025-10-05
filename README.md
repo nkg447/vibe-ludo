@@ -15,6 +15,7 @@ This is a complete implementation of the classic Ludo board game, supporting 2-4
 
 ### Core Gameplay
 - **Multi-player Support**: 2, 3, or 4 player games
+- **Color Selection**: Choose which colors to play with in 2-3 player games
 - **Authentic Rules**: Traditional Ludo rules implementation
 - **Dice Mechanics**: 
   - Roll 6 to move pieces out of home
@@ -141,6 +142,7 @@ The game uses a sophisticated state management system built on React Context and
 ### Design Features
 - **Gradient Backgrounds**: Modern visual appeal
 - **Color-coded Players**: Red, Blue, Yellow, Green themes
+- **Interactive Color Selection**: Visual feedback with hover effects and selection badges
 - **Interactive Elements**: Hover effects and animations
 - **Responsive Layout**: Mobile and desktop compatible
 - **Game Feedback**: Visual indicators for movable pieces
@@ -208,6 +210,11 @@ npm eject    # Eject from Create React App (not recommended)
 
 1. **Game Setup**:
    - Select number of players (2, 3, or 4)
+   - **For 2-3 Player Games**: Choose which colors you want to play with
+     - Click on color buttons to select/deselect colors
+     - Selected colors show a numbered badge indicating player order
+     - You can freely swap colors by clicking to deselect and selecting a new one
+     - The start button is enabled once you've selected the correct number of colors
    - Click "Start Game" to begin
 
 2. **Gameplay**:
@@ -254,6 +261,7 @@ npm eject    # Eject from Create React App (not recommended)
 ## 🔮 Future Enhancements
 
 The architecture supports future features like:
+- **Player Customization**: Custom player names and avatars
 - **Online Multiplayer**: Real-time game synchronization
 - **AI Players**: Computer-controlled opponents
 - **Game Persistence**: Save/load game functionality
