@@ -260,8 +260,8 @@ export const gameReducer = (state, action) => {
       // Check if player won
       const playerWon = hasPlayerWon(newPlayers[playerIndex]);
       
-      // Determine if player gets another turn (rolled 6 and didn't win, or captured a piece)
-      const getsAnotherTurn = (state.diceValue === GAME_CONSTANTS.WINNING_DICE_VALUE || capturedPieces.length > 0) && !playerWon;
+      // Determine if player gets another turn (rolled 6 and didn't win, or captured a piece, or reached the end)
+      const getsAnotherTurn = (state.diceValue === GAME_CONSTANTS.WINNING_DICE_VALUE || capturedPieces.length > 0 || newPosition === 57) && !playerWon;
       
       const nextPlayer = getsAnotherTurn ? state.currentPlayer : (state.currentPlayer + 1) % state.numberOfPlayers;
       
