@@ -1,6 +1,7 @@
 {
-  "short_name": "LUDO",
-  "name": "LUDO Game",
+  "short_name": "Vibe Ludo",
+  "name": "Vibe Ludo - Multiplayer Board Game",
+  "description": "Play the classic Ludo board game with friends online or offline",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +11,23 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait-primary",
+  "theme_color": "#4f46e5",
+  "background_color": "#ffffff",
+  "categories": ["games", "entertainment"],
+  "lang": "en",
+  "dir": "ltr"
 }
