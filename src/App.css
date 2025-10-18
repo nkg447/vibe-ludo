@@ -3,10 +3,36 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  position: relative;
+  min-height: 100vh;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* PWA specific styles */
+@media (display-mode: standalone) {
+  .App {
+    /* Add top padding for status bar in standalone mode */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Prevent text selection on game elements */
+.App {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Disable zoom on double tap for better game experience */
+.App {
+  touch-action: manipulation;
 }
