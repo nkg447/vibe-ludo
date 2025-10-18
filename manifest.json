@@ -21,8 +21,8 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/vibe-ludo/",
+  "scope": "/vibe-ludo/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#4f46e5",
